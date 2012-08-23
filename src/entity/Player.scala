@@ -31,6 +31,10 @@ class Player(gc: GameContainer, var x: Float, var y: Float) extends Entity {
       y = if (y <= ship.yMargin) ship.yMargin else gc.getHeight - ship.yMargin
     }
 
+    if (velocityX >= -0.2f && velocityX <= 0.2f) ship.forward()
+    else if (velocityX < 0) ship.left()
+    else ship.right()
+
     shootDelay = if (shootDelay >= 0) shootDelay - 0.02f * delta else 0f
   }
 

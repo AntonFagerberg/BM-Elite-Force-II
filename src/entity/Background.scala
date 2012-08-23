@@ -20,19 +20,19 @@ class Background(screenWidth: Float, screenHeight: Float, random: Random) extend
 class Star(screenWidth: Float, screenHeight: Float, random: Random) extends Entity {
   private val speed = 0.2f + random.nextFloat()
   private val image = new Image("gfx/star.png", false, Image.FILTER_NEAREST, Color.green)
-  //image.setAlpha(0.3f)
+  val scale = random.nextFloat()
   private val x = screenWidth * random.nextFloat()
-  private var y = -100f
+  private var y = -20f
 
   def update(delta: Int) {
     y += speed * delta
-    if (y > screenHeight + 100) {
+    if (y > screenHeight + 20) {
       link(new Star(screenWidth, screenHeight, random))
       unlink()
     }
   }
 
   def render() {
-    image.drawCentered(x, y)
+    image.draw(x, y, scale)
   }
 }
