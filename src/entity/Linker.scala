@@ -1,22 +1,23 @@
 package entity
 
-class Linker extends Entity {
-  def update(delta: Int) {
-    var currentEntity = this.getNext
+class Linker(name: String, reference: Option[Linker] = None) extends Entity {
+  def getReference = reference
+  override def toString = name
+
+  def update(delta: Int, linker: Linker = this) {
+    var currentEntity = getNext
     while (currentEntity.isDefined) {
-      currentEntity.get.update(delta)
+      currentEntity.get.update(delta, this)
       currentEntity = currentEntity.get.getNext
     }
   }
+
   def render() {
-    var currentEntity = this.getNext
+    var currentEntity = getNext
     while (currentEntity.isDefined) {
       currentEntity.get.render()
       currentEntity = currentEntity.get.getNext
     }
   }
-
-  def initiate(entity: Entity) {
-    link(entity)
-  }
 }
+

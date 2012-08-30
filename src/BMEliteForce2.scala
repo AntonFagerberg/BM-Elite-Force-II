@@ -2,25 +2,34 @@ import entity._
 import org.newdawn.slick._
 
 object BMEliteForce2 extends BasicGame("BM Elite Force II") {
-  val mainLinker = new Linker
-  var currentEntity: Option[Entity] = None
+  val enemies = new Linker("Enemies")
+  val playerBullets = new Linker("Player Bullets", Some(enemies))
+  val players = new Linker("Players", Some(playerBullets))
+  val enemyBullets = new Linker("Enemy Bullets")
+  val background = new Linker("Background")
+  val linkers = Seq(background, enemies, players, enemyBullets, playerBullets)
 
   def init(gc: GameContainer) {
-    mainLinker.initiate(new Player(gc, 500, 600))
-    mainLinker.link(new Background(gc.getWidth, gc.getHeight, Settings.random))
+    background.link(new Background(1440, 900, Settings.random))
+    players.link(new Player(gc, 500, 600))
+    enemies.link(new Asteroid("lava", Settings.random))
+    enemies.link(new Asteroid("lava", Settings.random))
+    enemies.link(new Asteroid("lava", Settings.random))
+    enemies.link(new Asteroid("lava", Settings.random))
+    enemies.link(new Asteroid("lava", Settings.random))
   }
 
   def update(gc: GameContainer, delta: Int) {
-    mainLinker.update(delta)
+    linkers.foreach(_.update(delta))
     if (gc.getInput.isKeyDown(Input.KEY_ESCAPE)) gc.exit()
   }
 
   def render(gc: GameContainer, g: Graphics) {
-    mainLinker.render()
+    linkers.foreach(_.render())
   }
 
   def main(args: Array[String]) {
-    val gameContainer = new AppGameContainer(this)
+    val gameContainer = new AppGameContainer(new ScalableGame(this, 1440, 900, true))
     gameContainer.setDisplayMode(Settings.width, Settings.height, Settings.fullScreen)
     gameContainer.start()
   }

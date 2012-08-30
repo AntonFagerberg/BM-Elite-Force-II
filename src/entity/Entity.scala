@@ -4,8 +4,12 @@ trait Entity {
   private var next: Option[Entity] = None
   private var previous: Option[Entity] = None
 
-  def update(delta: Int)
+  def update(delta: Int, linker: Linker)
   def render()
+  def collision(x: (Float, Float), y: (Float, Float)): Boolean = {
+    sys.error("Called collision on Entity which do not implement it.")
+    false
+  }
 
   def link(newEntity: Entity) {
     if (next.isDefined) {

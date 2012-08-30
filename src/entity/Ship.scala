@@ -24,11 +24,9 @@ class Ship(gc: GameContainer, color: String) {
     new Image("gfx/" + color + "_speeder_mark_1_R_2.png", false, Image.FILTER_NEAREST)
   )
 
-  private def speederScale(imageHeight: Int) =  0.07f * gc.getHeight / imageHeight
-
   def setSpeeder() {
     for (s <- speeder) {
-      flySprites += s.getScaledCopy(speederScale(s.getHeight))
+      flySprites += s.getScaledCopy(2.5f)
     }
 
     halfWidth = flySprites.head.getWidth / 2
@@ -39,10 +37,10 @@ class Ship(gc: GameContainer, color: String) {
 
   def bullet(x: Float, y: Float): Entity = {
     bulletSound.play(1.0f, 0.5f)
-    new Bullet(x, y - halfHeight, gc.getWidth, gc.getHeight, color)
+    new Bullet(x, y - halfHeight, color)
   }
 
-  def update(delta: Int) {
+  def update(delta: Int, linker: Linker) {
     spriteChange += delta
     if (spriteChange > 50) {
       spriteChange = 0
@@ -59,25 +57,37 @@ class Ship(gc: GameContainer, color: String) {
   }
 }
 
-private class Bullet(var x: Float, var y: Float, screenWidth: Int, screenHeight: Int, color: String) extends Entity {
+private class Bullet(var x: Float, var y: Float, color: String) extends Entity {
   val bulletColor = color match {
     case "green" => Color.green
     case _ => Color.white
   }
 
   private val image = new Image("gfx/bullet.png")
-  val xAlign = image.getWidth / 2
-  val yAlign = image.getHeight / 2
+  private val imageAlignX = image.getWidth / 2f
+  private val imageAlignY = image.getHeight / 2f
 
-  def update(delta: Int) {
+  def update(delta: Int, linker: Linker) {
     y -= 1.3f * delta
 
-    if (y < -100) {
-      unlink()
+    if (linker.getReference.isEmpty) sys.error("Could not get linker reference from Bullet.")
+    else {
+      val collisionX = (x - imageAlignX) -> (x + imageAlignX)
+      val collisionY = (y - imageAlignY) -> (y + imageAlignY)
+
+      var currentItem = linker.getReference.get.getNext
+      while (currentItem.isDefined) {
+        if (currentItem.get.collision(collisionX, collisionY))
+          unlink()
+        currentItem = currentItem.get.getNext
+      }
     }
+
+    if (y < -100)
+      unlink()
   }
 
   def render() {
-    image.draw(x - xAlign, y - yAlign, bulletColor)
+    image.draw(x - imageAlignX, y - imageAlignY, bulletColor)
   }
 }
