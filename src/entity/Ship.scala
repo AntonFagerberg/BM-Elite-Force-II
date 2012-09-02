@@ -73,7 +73,7 @@ private class Bullet(var x: Float, var y: Float, color: String) extends Entity {
     if (linker.getReference.isEmpty) sys.error("Could not get linker reference from Bullet.")
     else {
       val collisionX = (x - imageAlignX) -> (x + imageAlignX)
-      val collisionY = (y - imageAlignY) -> (y + imageAlignY)
+      val collisionY = (y - imageAlignY + 20) -> (y + imageAlignY + 20)
 
       var currentItem = linker.getReference.get.getNext
       while (currentItem.isDefined) {

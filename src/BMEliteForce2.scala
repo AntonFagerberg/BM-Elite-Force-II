@@ -1,3 +1,4 @@
+import collection.mutable
 import entity._
 import org.newdawn.slick._
 
@@ -32,5 +33,19 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
     val gameContainer = new AppGameContainer(new ScalableGame(this, 1440, 900, true))
     gameContainer.setDisplayMode(Settings.width, Settings.height, Settings.fullScreen)
     gameContainer.start()
+  }
+}
+
+class GameMaster(enemies: Linker) {
+  var superDelta = 0l
+  val spawn = new mutable.ArrayStack[(Long, Entity)]
+  spawn push 100L -> new Asteroid("lava", Settings.random)
+  spawn push 200L -> new Asteroid("lava", Settings.random)
+  spawn push 300L -> new Asteroid("lava", Settings.random)
+
+  def update(delta: Int) {
+    superDelta += delta
+    while (spawn.headOption.isDefined && spawn.head._1 <= superDelta)
+      enemies.link(spawn.head._2)
   }
 }
