@@ -40,11 +40,11 @@ class Ship(gc: GameContainer, color: String) {
     new Bullet(x, y - halfHeight, color)
   }
 
-  def update(delta: Int, linker: Linker) {
+  def update(delta: Int) {
     spriteChange += delta
     if (spriteChange > 50) {
       spriteChange = 0
-      spriteIndex = (spriteIndex + 1) % 2
+      spriteIndex = if (spriteIndex == 0) 1 else 0
     }
   }
 

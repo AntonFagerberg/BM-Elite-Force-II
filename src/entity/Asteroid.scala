@@ -33,7 +33,6 @@ class Asteroid(kind: String, random: Random) extends Entity {
     ((this.y - collisionHeight) < y._1 && (this.y + collisionHeight) > y._1 || (this.y - collisionHeight) < y._2 && (this.y + collisionHeight) > y._2)
     ) {
       if (health <= 0) {
-        link(new Asteroid(kind, random))
         unlink()
         true
       } else {

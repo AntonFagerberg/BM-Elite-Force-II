@@ -9,19 +9,17 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
   val enemyBullets = new Linker("Enemy Bullets")
   val background = new Linker("Background")
   val linkers = Seq(background, enemies, players, enemyBullets, playerBullets)
+  val level = new Level(enemies)
 
   def init(gc: GameContainer) {
     background.link(new Background(1440, 900, Settings.random))
     players.link(new Player(gc, 500, 600))
-    enemies.link(new Asteroid("lava", Settings.random))
-    enemies.link(new Asteroid("lava", Settings.random))
-    enemies.link(new Asteroid("lava", Settings.random))
-    enemies.link(new Asteroid("lava", Settings.random))
-    enemies.link(new Asteroid("lava", Settings.random))
+    level.one()
   }
 
   def update(gc: GameContainer, delta: Int) {
     linkers.foreach(_.update(delta))
+    level.update(delta)
     if (gc.getInput.isKeyDown(Input.KEY_ESCAPE)) gc.exit()
   }
 
@@ -36,16 +34,19 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
   }
 }
 
-class GameMaster(enemies: Linker) {
-  var superDelta = 0l
+class Level(enemies: Linker) {
+  var levelDelta = 0L
   val spawn = new mutable.ArrayStack[(Long, Entity)]
-  spawn push 100L -> new Asteroid("lava", Settings.random)
-  spawn push 200L -> new Asteroid("lava", Settings.random)
-  spawn push 300L -> new Asteroid("lava", Settings.random)
+
+  def one() {
+    spawn push 50000L -> new Asteroid("lava", Settings.random)
+    spawn push 20000L -> new Asteroid("lava", Settings.random)
+    spawn push 1000L -> new Asteroid("lava", Settings.random)
+  }
 
   def update(delta: Int) {
-    superDelta += delta
-    while (spawn.headOption.isDefined && spawn.head._1 <= superDelta)
-      enemies.link(spawn.head._2)
+    levelDelta += delta
+    while (spawn.headOption.isDefined && spawn.head._1 <= levelDelta)
+      enemies.link(spawn.pop()._2)
   }
 }
