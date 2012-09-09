@@ -1,6 +1,6 @@
 package entity
 
-class Linker(name: String, reference: Option[Linker] = None) extends Entity {
+class Linker(name: String, var reference: Option[Linker] = None) extends Entity {
   def getReference = reference
   override def toString = name
 
@@ -10,6 +10,10 @@ class Linker(name: String, reference: Option[Linker] = None) extends Entity {
       currentEntity.get.update(delta, this)
       currentEntity = currentEntity.get.getNext
     }
+  }
+
+  def setReference(linker: Linker) {
+    reference = Some(linker)
   }
 
   def render() {
