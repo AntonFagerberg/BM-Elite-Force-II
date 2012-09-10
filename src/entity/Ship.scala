@@ -4,38 +4,73 @@ import scala.Array
 import org.newdawn.slick.{Sound, GameContainer, Image, Color}
 import collection.mutable.ArrayBuffer
 
-class Ship(gc: GameContainer, colorString: String) {
-  private val flySprites = new ArrayBuffer[Image]
+class Ship(gc: GameContainer, kind: String = "speeder") {
   private var spriteChange = 0
   private var spriteIndex = 0
-  private var halfWidth = -1f
-  private var halfHeight = -1f
   private var direction = 0
 
-  private val color = colorString match {
-    case "green" => Color.green
-    case _ => Color.white
-  }
+  private var color = Color.green
 
   def xMargin = halfWidth
-  def yMargin= halfHeight
+  def yMargin = halfHeight
 
-  private val speeder = Array(
-    new Image("gfx/" + colorString + "_speeder_mark_1_1.png", false, Image.FILTER_NEAREST),
-    new Image("gfx/" + colorString + "_speeder_mark_1_2.png", false, Image.FILTER_NEAREST),
-    new Image("gfx/" + colorString + "_speeder_mark_1_L_1.png", false, Image.FILTER_NEAREST),
-    new Image("gfx/" + colorString + "_speeder_mark_1_L_2.png", false, Image.FILTER_NEAREST),
-    new Image("gfx/" + colorString + "_speeder_mark_1_R_1.png", false, Image.FILTER_NEAREST),
-    new Image("gfx/" + colorString + "_speeder_mark_1_R_2.png", false, Image.FILTER_NEAREST)
+  private val shipGreen = Array(
+    new Image("gfx/green_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/green_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/green_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/green_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/green_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/green_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
   )
 
-  def setSpeeder() {
-    for (s <- speeder) {
-      flySprites += s.getScaledCopy(2.5f)
-    }
+  private val shipYellow = Array(
+    new Image("gfx/yellow_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/yellow_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/yellow_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/yellow_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/yellow_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/yellow_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
+  )
 
-    halfWidth = flySprites.head.getWidth / 2
-    halfHeight = flySprites.head.getHeight / 2
+  private val shipBlue = Array(
+    new Image("gfx/blue_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/blue_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/blue_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/blue_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/blue_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/blue_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
+  )
+
+  private val shipRed = Array(
+    new Image("gfx/red_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/red_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/red_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/red_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/red_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+    new Image("gfx/red_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
+  )
+
+  private var shipSprites = shipGreen
+  private val halfWidth = shipGreen.head.getWidth / 2
+  private val halfHeight = shipGreen.head.getHeight / 2
+
+  def green() {
+    shipSprites = shipGreen
+    color = Color.green
+  }
+
+  def red() {
+    color = Color.red
+    shipSprites = shipRed
+  }
+  def blue() {
+    color = Color.blue
+    shipSprites = shipBlue
+  }
+
+  def yellow() {
+    shipSprites = shipYellow
+    color = Color.yellow
   }
 
   val bulletSound = new Sound("sfx/bullet.wav")
@@ -58,6 +93,6 @@ class Ship(gc: GameContainer, colorString: String) {
   def right() { direction = 2 }
 
   def draw(x: Float, y: Float) {
-    flySprites((direction * 2) + spriteIndex).drawCentered(x, y)
+    shipSprites((direction * 2) + spriteIndex).drawCentered(x, y)
   }
 }

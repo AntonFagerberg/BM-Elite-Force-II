@@ -1,8 +1,6 @@
-import util.Random
-
 object Settings {
-  val width = 1200
-  val height = 700
+  val width = 1440
+  val height = 900
   val fullScreen = false
-  val random = new Random()
+  val random = new util.Random()
 }

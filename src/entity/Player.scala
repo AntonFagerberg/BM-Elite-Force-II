@@ -4,23 +4,62 @@ import org.newdawn.slick.{Input, Image, GameContainer}
 import collection.mutable.ArrayBuffer
 
 class Player(gc: GameContainer, var x: Float, var y: Float) extends Entity {
-  val ship = new Ship(gc, "green")
-  ship.setSpeeder()
+  val ship = new Ship(gc, "speeder")
 
   private val speed = 0.6f
   private var velocityX = 0.0f
   private var velocityY = 0.0f
   private var shootDelay = 0.0f
+  private val input = gc.getInput
+
+  private var axisY = 0f
+  private var axisX = 0f
 
   override def collision(x: (Float, Float), y: (Float, Float)): Boolean = {
     false
   }
 
   def update(delta: Int, linker: Linker) {
-    if (linker.getReference.isDefined) controls(bulletLinker = linker.getReference.get)
-    else sys.error("Could not get reference linker in player.")
-
     ship.update(delta)
+
+    if (!(gc.getInput.isKeyDown(Input.KEY_UP) && gc.getInput.isKeyDown(Input.KEY_DOWN))) {
+      if (gc.getInput.isKeyDown(Input.KEY_UP)) velocityY = -speed
+      if (gc.getInput.isKeyDown(Input.KEY_DOWN)) velocityY = speed
+    }
+
+    if (!(gc.getInput.isKeyDown(Input.KEY_LEFT) && gc.getInput.isKeyDown(Input.KEY_RIGHT))) {
+      if (gc.getInput.isKeyDown(Input.KEY_LEFT)) velocityX =  -speed
+      if (gc.getInput.isKeyDown(Input.KEY_RIGHT)) velocityX = speed
+    }
+
+    if ((gc.getInput.isKeyDown(Input.KEY_SPACE) || (input.getControllerCount > 0 && input.getAxisValue(0, 5) > 0)) && shootDelay <= 0) {
+      linker.getReference.get.link(ship.bullet(x, y))
+      shootDelay = 2.0f
+    }
+
+    if (input.getControllerCount > 0) {
+      axisY = input.getAxisValue(0, 1)
+      axisX = input.getAxisValue(0, 0)
+
+      if (axisY > 0.25 || axisY < -0.25)
+        velocityY = axisY  * speed
+
+      if (axisX > 0.25 || axisX < -0.25)
+        velocityX = axisX * speed
+
+      if (input.isButtonPressed(11, 0))
+        ship.green()
+
+      if (input.isButtonPressed(12, 0))
+        ship.red()
+
+      if (input.isButtonPressed(13, 0))
+        ship.blue()
+
+      if (input.isButtonPressed(14, 0))
+        ship.yellow()
+    }
+
 
     if (x + ship.xMargin <= 1440 && x - ship.xMargin >= 0) {
       for (i <- 0 until delta)
@@ -53,23 +92,6 @@ class Player(gc: GameContainer, var x: Float, var y: Float) extends Entity {
 
     for (i <- 0 until delta)
       shootDelay = if (shootDelay >= 0) shootDelay - 0.02f else 0f
-  }
-
-  private def controls(bulletLinker: Linker) {
-    if (!(gc.getInput.isKeyDown(Input.KEY_UP) && gc.getInput.isKeyDown(Input.KEY_DOWN))) {
-      if (gc.getInput.isKeyDown(Input.KEY_UP)) velocityY = -speed
-      if (gc.getInput.isKeyDown(Input.KEY_DOWN)) velocityY = speed
-    }
-
-    if (!(gc.getInput.isKeyDown(Input.KEY_LEFT) && gc.getInput.isKeyDown(Input.KEY_RIGHT))) {
-      if (gc.getInput.isKeyDown(Input.KEY_LEFT)) velocityX =  -speed
-      if (gc.getInput.isKeyDown(Input.KEY_RIGHT)) velocityX = speed
-    }
-
-    if (gc.getInput.isKeyDown(Input.KEY_SPACE) && shootDelay <= 0) {
-      bulletLinker.link(ship.bullet(x, y))
-      shootDelay = 2.0f
-    }
   }
 
   def render() {
