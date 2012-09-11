@@ -29,6 +29,7 @@ class Level(random: Random, backgrounds: Linker, players: Linker, enemies: Linke
 
   def test(gameContainer: GameContainer) {
     clearLevel(gameContainer)
+    backgrounds.newLink(Some(new Background(1440, 900, random)))
     spawn push 0L -> new SaucerBoss
     levelDelta = 0L
   }

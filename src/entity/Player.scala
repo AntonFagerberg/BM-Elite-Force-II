@@ -1,6 +1,6 @@
 package entity
 
-import org.newdawn.slick.{Input, GameContainer}
+import org.newdawn.slick.{Color, GameContainer}
 
 class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends Entity {
   private val ship = new Ship(gc, 0)
@@ -13,8 +13,22 @@ class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends 
   private var axisY = 0f
   private var axisX = 0f
 
-  override def collision(x: (Float, Float), y: (Float, Float)): Boolean = {
-    false
+  override def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = {
+    if (
+        color != ship.getColor
+      &&
+        ((this.x - ship.hitBoxX) < x._1 && (this.x + ship.hitBoxX) > x._1 || (this.x - ship.hitBoxX) < x._2 && (this.x + ship.hitBoxX) > x._2)
+      &&
+        ((this.y - ship.hitBoxY) < y._1 && (this.y + ship.hitBoxY) > y._1 || (this.y - ship.hitBoxY) < y._2 && (this.y + ship.hitBoxY) > y._2)
+    ) {
+//      hitSound.play()
+
+      this.x = 0f
+      this.y = 0f
+      true
+    } else {
+      false
+    }
   }
 
   def update(delta: Int, linker: Linker) {
@@ -47,7 +61,6 @@ class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends 
       if (input.isButtonPressed(14, 0))
         ship.yellow()
     }
-
 
     for (i <- 0 until delta) {
       if (x + ship.marginX <= 1440 && x - ship.marginX >= 0) {

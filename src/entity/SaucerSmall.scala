@@ -1,6 +1,6 @@
 package entity
 
-import org.newdawn.slick.{Sound, Image}
+import org.newdawn.slick.{Color, Sound, Image}
 import util.Random
 
 class SaucerSmall(random: Random) extends Entity {
@@ -23,7 +23,7 @@ class SaucerSmall(random: Random) extends Entity {
     }
   }
 
-  override def collision(x: (Float, Float), y: (Float, Float)): Boolean = {
+  override def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = {
     if (
     ((this.x - collisionWidth) < x._1 && (this.x + collisionWidth) > x._1 || (this.x - collisionWidth) < x._2 && (this.x + collisionWidth) > x._2)
     &&

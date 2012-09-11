@@ -1,5 +1,7 @@
 package entity
 
+import org.newdawn.slick.Color
+
 trait Entity {
   private var next: Option[Entity] = None
   private var previous: Option[Entity] = None
@@ -8,7 +10,7 @@ trait Entity {
 
   def render()
 
-  def collision(x: (Float, Float), y: (Float, Float)): Boolean = {
+  def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = {
     println("Called collision on Entity which does not implement it.")
     false
   }

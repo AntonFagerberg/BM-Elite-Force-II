@@ -52,13 +52,18 @@ class Ship(gc: GameContainer, index: Int) {
   private var shipSprites = shipGreen
   private val halfWidth = shipGreen.head.getWidth / 2
   private val halfHeight = shipGreen.head.getHeight / 2
+  private val hitBoxXv = halfWidth - 10
+  private val hitBoxYv = halfHeight - 10
   private val bulletSound = new Sound("sfx/bullet.wav")
 
   def marginX = halfWidth
   def marginY = halfHeight
+  def hitBoxX = hitBoxXv
+  def hitBoxY = hitBoxYv
   def forward() { direction = 0 }
   def left() { direction = 2 }
   def right() { direction = 4 }
+  def getColor = color
 
   def green() {
     shipSprites = shipGreen

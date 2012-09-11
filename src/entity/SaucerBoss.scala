@@ -99,7 +99,7 @@ class SaucerBoss extends Entity {
     }
   }
 
-  override def collision(x: (Float, Float), y: (Float, Float)): Boolean = {
+  override def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = {
     if (
     ((this.x - collisionWidth) < x._1 && (this.x + collisionWidth) > x._1 || (this.x - collisionWidth) < x._2 && (this.x + collisionWidth) > x._2)
     &&
