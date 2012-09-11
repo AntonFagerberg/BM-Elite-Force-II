@@ -3,27 +3,30 @@ package entity
 import org.newdawn.slick.{Color, Sound, Image}
 import util.Random
 
-class SaucerBoss(random: Random) extends Entity {
-  var x = 720f
-  var y = -450f
-  var bulletDelay = 100
-  var rotationRadians = 0d
-  var angle = 0f
-  var angle1 = 0d
-  var angle1cos = 0f
-  var angle1sin = 0f
-  var angle2 = 0d
-  var angle2cos = 0f
-  var angle2sin = 0f
-  var angle3 = 0d
-  var angle3cos = 0f
-  var angle3sin = 0f
-  val expandSound = new Sound("sfx/saucer_boss_expand.wav")
+class SaucerBoss extends Entity {
+  private val expandSound = new Sound("sfx/saucer_boss_expand.wav")
+  private val hitSound = new Sound("sfx/asteroid_hit.wav")
+  private var bullets: Option[Linker] = None
+  private val x = 720f
+  private var y = -450f
+  private val maxHealth = 150f
+  private var health = 150f
+  private var bulletDelay = 100
+  private var rotationRadians = 0d
+  private var angle = 0f
+  private var angle1 = 0d
+  private var angle1cos = 0f
+  private var angle1sin = 0f
+  private var angle2 = 0d
+  private var angle2cos = 0f
+  private var angle2sin = 0f
+  private var angle3 = 0d
+  private var angle3cos = 0f
+  private var angle3sin = 0f
+  private var superDelta = 0
+  private var spriteChange = 0
 
-  var superDelta = 0
-  var spriteChange = 0
-
-  val sprites = Seq(
+  private val sprites = IndexedSeq(
     new Image("gfx/saucer_boss_inactive_1.png", false, Image.FILTER_NEAREST).getScaledCopy(5f),
     new Image("gfx/saucer_boss_inactive_2.png", false, Image.FILTER_NEAREST).getScaledCopy(5f),
     new Image("gfx/saucer_boss_inactive_3.png", false, Image.FILTER_NEAREST).getScaledCopy(5f),
@@ -33,14 +36,10 @@ class SaucerBoss(random: Random) extends Entity {
     new Image("gfx/saucer_boss_active_3.png", false, Image.FILTER_NEAREST).getScaledCopy(5f)
   )
 
-  var sprite = sprites.head
 
-  val collisionHeight = sprites.head.getHeight * 0.35f
-  val collisionWidth = sprites.head.getWidth * 0.35f
-
-  val maxHealth = 150f
-  var health = 150f
-  val hitSound = new Sound("sfx/asteroid_hit.wav")
+  private val collisionHeight = sprites.head.getHeight * 0.35f
+  private val collisionWidth = sprites.head.getWidth * 0.35f
+  private var sprite = sprites.head
 
   def update(delta: Int, linker: Linker) {
     superDelta += delta
@@ -84,21 +83,19 @@ class SaucerBoss(random: Random) extends Entity {
           angle3 = rotationRadians + -1.53d
           angle3cos = math.cos(angle3).toFloat
           angle3sin = math.sin(angle3).toFloat
+          if (bullets.isEmpty) bullets = linker.reference(0)
 
-          if (linker.getReference.isDefined) linker.getReference.get.link(new Bullet(x + 90f * angle1cos, y + 90f * angle1sin, Color.red, angle1cos, angle1sin, 90f + (angle1 * 180d / math.Pi).toFloat))
-          if (linker.getReference.isDefined) linker.getReference.get.link(new Bullet(x + 90f * angle2cos, y + 90f * angle2sin, Color.green, angle2cos, angle2sin, 90f + (angle2 * 180d / math.Pi).toFloat))
-          if (linker.getReference.isDefined) linker.getReference.get.link(new Bullet(x + 90f * angle3cos, y + 90f * angle3sin, Color.yellow, angle3cos, angle3sin, 90f + (angle3 * 180d / math.Pi).toFloat))
-          else sys.error("Could not get reference linker in SaucerBoss.")
-          bulletDelay = 50
+          if (bullets.isDefined) bullets.get.link(new Bullet(x + 100f * angle1cos, y + 100f * angle1sin, Color.red, angle1cos, angle1sin, 90f + (angle1 * 180d / math.Pi).toFloat))
+          if (bullets.isDefined) bullets.get.link(new Bullet(x + 100f * angle2cos, y + 100f * angle2sin, Color.green, angle2cos, angle2sin, 90f + (angle2 * 180d / math.Pi).toFloat))
+          if (bullets.isDefined) bullets.get.link(new Bullet(x + 100f * angle3cos, y + 100f * angle3sin, Color.yellow, angle3cos, angle3sin, 90f + (angle3 * 180d / math.Pi).toFloat))
+          bulletDelay += 50
         }
       }
     }
 
-    if (y < 450)
-      y += 0.2f * delta
-
-    if (y > 1000) {
-      unlink()
+    for (i <- 0 until delta) {
+      if (y < 450) y += 0.2f
+      else if(y != 450) y = 450
     }
   }
 

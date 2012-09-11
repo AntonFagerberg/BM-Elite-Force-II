@@ -1,20 +1,19 @@
 package entity
 
-import scala.Array
 import org.newdawn.slick.{Sound, GameContainer, Image, Color}
-import collection.mutable.ArrayBuffer
 
-class Ship(gc: GameContainer, kind: String = "speeder") {
+class Ship(gc: GameContainer, index: Int) {
+  private val kind = index match {
+    case 0 => "speeder"
+    case _ => println("Called undefined index '" + index + "' in Ship.") ; "speeder"
+  }
+
   private var spriteChange = 0
   private var spriteIndex = 0
   private var direction = 0
-
   private var color = Color.green
 
-  def xMargin = halfWidth
-  def yMargin = halfHeight
-
-  private val shipGreen = Array(
+  private val shipGreen = IndexedSeq(
     new Image("gfx/green_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/green_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/green_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -23,7 +22,7 @@ class Ship(gc: GameContainer, kind: String = "speeder") {
     new Image("gfx/green_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
   )
 
-  private val shipYellow = Array(
+  private val shipYellow = IndexedSeq(
     new Image("gfx/yellow_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/yellow_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/yellow_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -32,7 +31,7 @@ class Ship(gc: GameContainer, kind: String = "speeder") {
     new Image("gfx/yellow_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
   )
 
-  private val shipBlue = Array(
+  private val shipBlue = IndexedSeq(
     new Image("gfx/blue_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/blue_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/blue_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -41,7 +40,7 @@ class Ship(gc: GameContainer, kind: String = "speeder") {
     new Image("gfx/blue_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
   )
 
-  private val shipRed = Array(
+  private val shipRed = IndexedSeq(
     new Image("gfx/red_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/red_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
     new Image("gfx/red_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -53,6 +52,13 @@ class Ship(gc: GameContainer, kind: String = "speeder") {
   private var shipSprites = shipGreen
   private val halfWidth = shipGreen.head.getWidth / 2
   private val halfHeight = shipGreen.head.getHeight / 2
+  private val bulletSound = new Sound("sfx/bullet.wav")
+
+  def marginX = halfWidth
+  def marginY = halfHeight
+  def forward() { direction = 0 }
+  def left() { direction = 2 }
+  def right() { direction = 4 }
 
   def green() {
     shipSprites = shipGreen
@@ -73,8 +79,6 @@ class Ship(gc: GameContainer, kind: String = "speeder") {
     color = Color.yellow
   }
 
-  val bulletSound = new Sound("sfx/bullet.wav")
-
   def bullet(x: Float, y: Float): Entity = {
     bulletSound.play(1.0f, 0.5f)
     new Bullet(x, y - halfHeight, color)
@@ -88,11 +92,7 @@ class Ship(gc: GameContainer, kind: String = "speeder") {
     }
   }
 
-  def forward() { direction = 0 }
-  def left() { direction = 1 }
-  def right() { direction = 2 }
-
   def draw(x: Float, y: Float) {
-    shipSprites((direction * 2) + spriteIndex).drawCentered(x, y)
+    shipSprites(direction + spriteIndex).drawCentered(x, y)
   }
 }

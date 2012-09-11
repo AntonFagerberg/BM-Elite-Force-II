@@ -1,17 +1,15 @@
 package entity
 
-import org.newdawn.slick.{Input, Image, GameContainer}
-import collection.mutable.ArrayBuffer
+import org.newdawn.slick.{Input, GameContainer}
 
-class Player(gc: GameContainer, var x: Float, var y: Float) extends Entity {
-  val ship = new Ship(gc, "speeder")
-
+class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends Entity {
+  private val ship = new Ship(gc, 0)
   private val speed = 0.6f
+  private val input = gc.getInput
+
   private var velocityX = 0.0f
   private var velocityY = 0.0f
   private var shootDelay = 0.0f
-  private val input = gc.getInput
-
   private var axisY = 0f
   private var axisX = 0f
 
@@ -22,22 +20,12 @@ class Player(gc: GameContainer, var x: Float, var y: Float) extends Entity {
   def update(delta: Int, linker: Linker) {
     ship.update(delta)
 
-    if (!(gc.getInput.isKeyDown(Input.KEY_UP) && gc.getInput.isKeyDown(Input.KEY_DOWN))) {
-      if (gc.getInput.isKeyDown(Input.KEY_UP)) velocityY = -speed
-      if (gc.getInput.isKeyDown(Input.KEY_DOWN)) velocityY = speed
-    }
-
-    if (!(gc.getInput.isKeyDown(Input.KEY_LEFT) && gc.getInput.isKeyDown(Input.KEY_RIGHT))) {
-      if (gc.getInput.isKeyDown(Input.KEY_LEFT)) velocityX =  -speed
-      if (gc.getInput.isKeyDown(Input.KEY_RIGHT)) velocityX = speed
-    }
-
-    if ((gc.getInput.isKeyDown(Input.KEY_SPACE) || (input.getControllerCount > 0 && input.getAxisValue(0, 5) > 0)) && shootDelay <= 0) {
-      linker.getReference.get.link(ship.bullet(x, y))
-      shootDelay = 2.0f
-    }
-
     if (input.getControllerCount > 0) {
+      if (shootDelay < 0f && input.getAxisValue(0, 5) > 0 && linker.reference(0).isDefined) {
+        linker.reference(0).get.link(ship.bullet(x, y))
+        shootDelay = 2.0f
+      }
+
       axisY = input.getAxisValue(0, 1)
       axisX = input.getAxisValue(0, 0)
 
@@ -61,37 +49,29 @@ class Player(gc: GameContainer, var x: Float, var y: Float) extends Entity {
     }
 
 
-    if (x + ship.xMargin <= 1440 && x - ship.xMargin >= 0) {
-      for (i <- 0 until delta)
+    for (i <- 0 until delta) {
+      if (x + ship.marginX <= 1440 && x - ship.marginX >= 0) {
         x = x + velocityX
+        velocityX = if (velocityX < 0.001 && velocityX > -0.001) 0 else velocityX * 0.99f
 
-      if (velocityX < 0.1 && velocityX > -0.1) {
-        ship.forward()
-        velocityX = 0
+        if (velocityX > 0.1) ship.right()
+        else if (velocityX < -0.1) ship.left()
+        else ship.forward()
       } else {
-        if (velocityX < 0) ship.left()
-        else ship.right()
-        for (i <- 0 until delta)
-          velocityX *= 0.992f
+        velocityX = 0
+        x = if (x <= ship.marginX) ship.marginX else 1440 - ship.marginX
       }
-    } else {
-      velocityX = 0
-      x = if (x <= ship.xMargin) ship.xMargin else 1440 - ship.xMargin
-    }
 
-    if (y + ship.yMargin <= 900 && y - ship.yMargin >= 0) {
-      for (i <- 0 until delta) {
+      if (y + ship.marginY <= 900 && y - ship.marginY >= 0) {
         y = y + velocityY
-        velocityY *= 0.99f
+        velocityY = if (velocityY < 0.001 && velocityY > -0.001) 0 else velocityY * 0.99f
+      } else {
+        velocityY = 0
+        y = if (y <= ship.marginY) ship.marginY else 900 - ship.marginY
       }
-    } else {
-      velocityY = 0
-      y = if (y <= ship.yMargin) ship.yMargin else 900 - ship.yMargin
-    }
 
-
-    for (i <- 0 until delta)
       shootDelay = if (shootDelay >= 0) shootDelay - 0.02f else 0f
+    }
   }
 
   def render() {
