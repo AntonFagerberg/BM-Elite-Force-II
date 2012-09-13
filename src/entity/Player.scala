@@ -3,7 +3,8 @@ package entity
 import org.newdawn.slick.{Color, GameContainer}
 
 class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends Entity {
-  private val ship = new Ship(gc, 0)
+  println("new: " + index)
+  private val ship = new Ship(gc, index)
   private val speed = 0.6f
   private val input = gc.getInput
 
@@ -34,14 +35,14 @@ class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends 
   def update(delta: Int, linker: Linker) {
     ship.update(delta)
 
-    if (input.getControllerCount > 0) {
-      if (shootDelay < 0f && input.getAxisValue(0, 5) > 0 && linker.reference(0).isDefined) {
+    if (input.getControllerCount >= index) {
+      if (shootDelay < 0f && input.getAxisValue(index, 5) > 0 && linker.reference(0).isDefined) {
         linker.reference(0).get.link(ship.bullet(x, y))
         shootDelay = 2.0f
       }
 
-      axisY = input.getAxisValue(0, 1)
-      axisX = input.getAxisValue(0, 0)
+      axisY = input.getAxisValue(index, 1)
+      axisX = input.getAxisValue(index, 0)
 
       if (axisY > 0.25 || axisY < -0.25)
         velocityY = axisY  * speed
@@ -49,16 +50,16 @@ class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends 
       if (axisX > 0.25 || axisX < -0.25)
         velocityX = axisX * speed
 
-      if (input.isButtonPressed(11, 0))
+      if (input.isButtonPressed(11, index) || input.getAxisValue(index, 3) > 0.5)
         ship.green()
 
-      if (input.isButtonPressed(12, 0))
+      if (input.isButtonPressed(12, index) || input.getAxisValue(index, 2) > 0.5)
         ship.red()
 
-      if (input.isButtonPressed(13, 0))
+      if (input.isButtonPressed(13, index) || input.getAxisValue(index, 2) < -0.5)
         ship.blue()
 
-      if (input.isButtonPressed(14, 0))
+      if (input.isButtonPressed(14, index) || input.getAxisValue(index, 3) < -0.5)
         ship.yellow()
     }
 

@@ -5,6 +5,7 @@ import org.newdawn.slick.{Sound, GameContainer, Image, Color}
 class Ship(gc: GameContainer, index: Int) {
   private val kind = index match {
     case 0 => "speeder"
+    case 1 => "speeder"
     case _ => println("Called undefined index '" + index + "' in Ship.") ; "speeder"
   }
 
