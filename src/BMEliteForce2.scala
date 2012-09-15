@@ -16,7 +16,7 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
   enemyBullets.addReference(players)
 
   def init(gameContainer: GameContainer) {
-    level.one(gameContainer)
+    level.intro(gameContainer)
   }
 
   def update(gameContainer: GameContainer, delta: Int) {
@@ -38,6 +38,7 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
     gameContainer.setDisplayMode(Setting.width, Setting.height, Setting.fullScreen)
     gameContainer.setUpdateOnlyWhenVisible(false)
     gameContainer.setForceExit(false)
+    gameContainer.setMouseGrabbed(true)
     gameContainer.start()
   }
 }

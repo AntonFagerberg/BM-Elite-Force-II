@@ -9,8 +9,7 @@ class SaucerBoss extends Entity {
   private var bullets: Option[Linker] = None
   private val x = 720f
   private var y = -450f
-  private val maxHealth = 150f
-  private var health = 150f
+  private var health = 450f
   private var bulletDelay = 100
   private var rotationRadians = 0d
   private var angle = 0f
@@ -63,7 +62,14 @@ class SaucerBoss extends Entity {
 
       if (superDelta >= 13727) {
         for (i <- 0 until delta) {
-          angle = 0.03f + (0.22f / maxHealth * (maxHealth - health))
+          // 0.25
+
+          angle =
+            if (health > 400) 0.03f + (0.10f * (450 - health) / 50)
+            else if (health > 300) 0.13f * (-350 + health) / 50
+            else if (health > 200) 0.13f * (250 - health) / 50
+            else 0.13f + (0.12f * (200 - health) / 200)
+
           sprites(4).rotate(angle)
           sprites(5).rotate(angle)
           sprites(6).rotate(angle)

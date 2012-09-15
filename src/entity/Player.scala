@@ -23,8 +23,8 @@ class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends 
     ) {
 //      hitSound.play()
 
-      this.x = 0f
-      this.y = 0f
+//      this.x = 0f
+//      this.y = 0f
       true
     } else {
       false
