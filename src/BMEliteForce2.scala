@@ -16,7 +16,7 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
   enemyBullets.addReference(players)
 
   def init(gameContainer: GameContainer) {
-    level.intro(gameContainer)
+    level.one(gameContainer)
   }
 
   def update(gameContainer: GameContainer, delta: Int) {

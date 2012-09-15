@@ -36,7 +36,6 @@ class SaucerBoss extends Entity {
     new Image("gfx/saucer_boss_active_3.png", false, Image.FILTER_NEAREST).getScaledCopy(5f)
   )
 
-
   private val collisionHeight = sprites.head.getHeight * 0.35f
   private val collisionWidth = sprites.head.getWidth * 0.35f
   private var sprite = sprites.head
@@ -85,9 +84,11 @@ class SaucerBoss extends Entity {
           angle3sin = math.sin(angle3).toFloat
           if (bullets.isEmpty) bullets = linker.reference(0)
 
-          if (bullets.isDefined) bullets.get.link(new Bullet(x + 100f * angle1cos, y + 100f * angle1sin, Color.red, angle1cos, angle1sin, 90f + (angle1 * 180d / math.Pi).toFloat))
-          if (bullets.isDefined) bullets.get.link(new Bullet(x + 100f * angle2cos, y + 100f * angle2sin, Color.green, angle2cos, angle2sin, 90f + (angle2 * 180d / math.Pi).toFloat))
-          if (bullets.isDefined) bullets.get.link(new Bullet(x + 100f * angle3cos, y + 100f * angle3sin, Color.yellow, angle3cos, angle3sin, 90f + (angle3 * 180d / math.Pi).toFloat))
+          if (bullets.isDefined) {
+            bullets.get.link(new Bullet(x + 100f * angle1cos, y + 100f * angle1sin, Color.red, angle1cos, angle1sin, 90f + (angle1 * 180d / math.Pi).toFloat))
+            bullets.get.link(new Bullet(x + 100f * angle2cos, y + 100f * angle2sin, Color.green, angle2cos, angle2sin, 90f + (angle2 * 180d / math.Pi).toFloat))
+            bullets.get.link(new Bullet(x + 100f * angle3cos, y + 100f * angle3sin, Color.yellow, angle3cos, angle3sin, 90f + (angle3 * 180d / math.Pi).toFloat))
+          }
           bulletDelay += 50
         }
       }

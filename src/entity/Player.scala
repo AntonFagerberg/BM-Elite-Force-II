@@ -3,7 +3,6 @@ package entity
 import org.newdawn.slick.{Color, GameContainer}
 
 class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends Entity {
-  println("new: " + index)
   private val ship = new Ship(gc, index)
   private val speed = 0.6f
   private val input = gc.getInput

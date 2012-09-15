@@ -1,7 +1,7 @@
 package entity
 
 import collection.mutable
-import org.newdawn.slick.{Input, GameContainer, Music}
+import org.newdawn.slick.{Color, Input, GameContainer, Music}
 import util.Random
 
 class Level(random: Random, backgrounds: Linker, players: Linker, enemies: Linker) {
@@ -39,10 +39,31 @@ class Level(random: Random, backgrounds: Linker, players: Linker, enemies: Linke
   }
 
   def one(gameContainer: GameContainer) {
+    gc = gameContainer
     clearLevel(gameContainer)
     backgrounds.newLink(Some(new Background(1440, 900, random)))
 
     spawn push 41201L -> new SaucerBoss
+
+    // 27746
+    spawn push 33000L -> new Liner("white", -20f, -20f, colors = IndexedSeq(Color.green), angle = 180f, speedX = 0.5f)
+
+    spawn push 26000L -> new Liner("white", -20f, -20f, colors = IndexedSeq(Color.red, Color.green, Color.yellow, Color.blue), colorSwitch = 10, angle = 90f, speedY = 0.2f)
+    spawn push 26000L -> new Liner("white", 1460f, -20f, colors = IndexedSeq(Color.red, Color.green, Color.yellow, Color.blue), colorSwitch = 10, angle = 270f, speedY = 0.2f)
+
+    spawn push 20500L -> new Liner("white", -20f, -20f, colors = IndexedSeq(Color.green), angle = 180f, speedX = 0.35f, bulletSpeed = 3f)
+    spawn push 20500L -> new Liner("white", 1460f, -20f, colors = IndexedSeq(Color.yellow), angle = 180f, speedX = -0.35f, bulletSpeed = 3f)
+    spawn push 20500L -> new Liner("white", -20f, -20f, colors = IndexedSeq(Color.red), angle = 90f, speedY = 0.3f, bulletSpeed = 3f)
+    spawn push 20500L -> new Liner("white", 1460f, -20f, colors = IndexedSeq(Color.blue), angle = 270f, speedY = 0.3f, bulletSpeed = 3f)
+
+    spawn push 14100L -> new Liner("white", -20f, -20f, colors = IndexedSeq(Color.green), angle = 90f, speedY = 0.2f)
+    spawn push 14100L -> new Liner("white", 1460f, -20f, colors = IndexedSeq(Color.blue), angle = 270f, speedY = 0.2f)
+
+    spawn push 8000L -> new Liner("white", -20f, -20f, colors = IndexedSeq(Color.yellow), angle = 180f, speedX = 0.3f, bulletSpeed = 5f)
+    spawn push 8000L -> new Liner("white", 1460f, -20f, colors = IndexedSeq(Color.yellow), angle = 180f, speedX = -0.3f, bulletSpeed = 5f)
+
+    spawn push 1500L -> new Liner("white", -20f, -20f, colors = IndexedSeq(Color.red), angle = 90f, speedY = 0.2f, bulletSpeed = 10f)
+    spawn push 1500L -> new Liner("white", 1460f, -20f, colors = IndexedSeq(Color.red), angle = 270f, speedY = 0.2f, bulletSpeed = 10f)
 
     music(1).play()
     levelDelta = 0L
