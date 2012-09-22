@@ -1,4 +1,5 @@
 import entity._
+import level.LevelManager
 import org.newdawn.slick._
 
 object BMEliteForce2 extends BasicGame("BM Elite Force II") {
@@ -8,7 +9,7 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
   val players = new Linker("Players")
   val background = new Linker("Background")
   val linkers = Seq(background, enemies, players, enemyBullets, playerBullets)
-  val level = new Level(Setting.random, background, players, enemies)
+  var levelmanager = new LevelManager(Setting.random, background, players, enemies)
 
   players.addReference(playerBullets)
   playerBullets.addReference(enemies)
@@ -16,12 +17,12 @@ object BMEliteForce2 extends BasicGame("BM Elite Force II") {
   enemyBullets.addReference(players)
 
   def init(gameContainer: GameContainer) {
-    level.intro(gameContainer)
+    levelmanager.init(gameContainer: GameContainer)
   }
 
   def update(gameContainer: GameContainer, delta: Int) {
     linkers.foreach(_.update(delta))
-    level.update(delta)
+    levelmanager.update(delta)
 
     if (gameContainer.getInput.isKeyDown(Input.KEY_ESCAPE))
       gameContainer.setFullscreen(!gameContainer.isFullscreen)

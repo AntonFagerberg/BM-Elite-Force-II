@@ -50,4 +50,6 @@ class Liner(kind: String, var x: Float, var y: Float, colors: IndexedSeq[Color] 
   def render() {
     sprite(0).drawCentered(x, y)
   }
+
+  override def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = false
 }

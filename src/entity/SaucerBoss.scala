@@ -38,6 +38,7 @@ class SaucerBoss extends Entity {
   private val collisionHeight = sprites.head.getHeight * 0.35f
   private val collisionWidth = sprites.head.getWidth * 0.35f
   private var sprite = sprites.head
+  private val explosion = new Sound("sfx/explosion_big.wav")
 
   def update(delta: Int, linker: Linker) {
     superDelta += delta
@@ -115,6 +116,7 @@ class SaucerBoss extends Entity {
       hitSound.play()
 
       if (health <= 0) {
+        explosion.play()
         unlink()
         true
       } else {
