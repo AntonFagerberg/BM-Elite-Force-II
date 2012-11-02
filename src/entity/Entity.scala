@@ -1,6 +1,6 @@
 package entity
 
-import org.newdawn.slick.{Graphics, GameContainer}
+import org.newdawn.slick.{Color, Graphics, GameContainer}
 import org.newdawn.slick.geom.Shape
 
 trait Entity {
@@ -26,7 +26,14 @@ trait Entity {
     if (nextEntity.isDefined) nextEntity.get.render(gameContainer, graphics)
   }
 
-  def collision(hitBoxes: List[Shape]): Boolean = false
+  def linkedCollision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Int = {
+    if (collision && next.isDefined) 1 + next.get.linkedCollision
+    else if (!collision && next.isDefined) next.get.linkedCollision
+    else if (collision) 1
+    else 0
+  }
+
+  def collision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Boolean = false
 
   def link(entity: Entity) {
     if (nextEntity.isDefined) nextEntity.get.previousEntity = Some(entity)

@@ -1,7 +1,7 @@
 package entity
 
 import org.newdawn.slick.geom.{Shape, Rectangle}
-import org.newdawn.slick.{Graphics, GameContainer}
+import org.newdawn.slick.{Color, Graphics, GameContainer}
 
 class TestBox extends Entity {
   val box = new Rectangle(100, 100, 100, 100)
@@ -15,8 +15,7 @@ class TestBox extends Entity {
     renderNext
   }
 
-  override def collision(hitBoxes: List[Shape]): Boolean = {
-    for (hitBox <- hitBoxes if hitBox.contains(box)) println("Hit!")
-    false
+  override def collision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Boolean = {
+    hitBoxes.exists(_ intersects(box))
   }
 }

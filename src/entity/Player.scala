@@ -4,6 +4,7 @@ import org.newdawn.slick._
 import geom.Rectangle
 
 class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerIndex: Int, var x: Float, var y: Float) extends Entity {
+  private val bulletStarter = new Starter
   private val ship = new Ship
   private val speed = 0.6f
   private var velocityX = 0.0f
@@ -13,7 +14,7 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
   private var axisX = 0f
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
-    if (controllerIndex < gameContainer.getInput.getControllerCount) {
+    if (controllerIndex < gameContainer.getInput.getControllerCount && controllerIndex >= 0) {
 //      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(index, 5) > 0 && linker.reference(0).isDefined) {
 //        linker.reference(0).get.link(ship.bullet(x, y))
 //        shootDelay = 2.0f
@@ -29,6 +30,17 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
       if (gameContainer.getInput.isButtonPressed(12, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) > 0.5) ship.red()
       if (gameContainer.getInput.isButtonPressed(13, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) < -0.5) ship.blue()
       if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) ship.yellow()
+    } else if (controllerIndex == -1) {
+      if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) {
+        println("PEW!")
+        bulletStarter.link(new Bullet(x, y, ship.getColor))
+        shootDelay = 2.0f
+      }
+
+      if (gameContainer.getInput.isKeyDown(Input.KEY_UP)) velocityY = -speed
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_DOWN)) velocityY = speed
+      if (gameContainer.getInput.isKeyDown(Input.KEY_LEFT)) velocityX = -speed
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_RIGHT)) velocityX = speed
     }
 
     for (i <- 0 until delta) {
@@ -56,24 +68,25 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
     }
 
     ship.update(delta, x, y)
-
-
-
+    bulletStarter.update
     updateNext
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
     ship.render(graphics, x, y)
+    bulletStarter.render
     renderNext
   }
 
   private class Ship {
-    private trait HitBox {
-      val hitBoxes: IndexedSeq[Rectangle] = IndexedSeq()
-    }
+//    private trait HitBox {
+//      val hitBoxes: List[Rectangle] = IndexedSeq()
+//    }
 
-    private class HitBoxSpeeder extends HitBox {
-      override val hitBoxes = IndexedSeq(new Rectangle(x, y, 30, 80), new Rectangle(x, y, 64, 35))
+    private class HitBoxSpeeder /*extends HitBox*/ {
+      /*override*/ val hitBoxes = List(new Rectangle(x, y, 30, 80), new Rectangle(x, y, 64, 35))
+
+      def getHitBoxes = hitBoxes
 
       def render(graphics: Graphics) {
         for (hitBox <- hitBoxes) graphics.draw(hitBox)
@@ -91,6 +104,7 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
     private var color = Color.green
 
     private val kind = controllerIndex match {
+      case -1 => "speeder"
       case 0 => "speeder"
       case 1 => "speeder"
       case _ => println("Called undefined index '" + controllerIndex + "' in Ship.") ; "speeder"
@@ -174,7 +188,7 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
       color = Color.yellow
     }
 
-    def getColor = color
+    def getColor: Color = color
 
 //    def bullet(x: Float, y: Float): Entity = {
 //      bulletSound.play(1.0f, 0.5f)
@@ -182,6 +196,8 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
 //    }
 
     def update(delta: Int, x: Float, y: Float) {
+      if (hostileStarter.linkedCollision(hitBox.getHitBoxes, Some(color)) > 0) println("hit!")
+
       spriteChange += delta
       if (spriteChange > 50) {
         spriteChange = 0
