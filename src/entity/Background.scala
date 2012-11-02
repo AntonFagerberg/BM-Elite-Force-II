@@ -1,39 +1,33 @@
 package entity
 
 import util.Random
-import org.newdawn.slick.{Color, Image}
-import collection.mutable.ArrayBuffer
-import collection.immutable.IntMap
+import org.newdawn.slick.{Graphics, GameContainer, Image}
 
-class Background(screenWidth: Float, screenHeight: Float, random: Random) extends Entity {
-  val backgroundLinker = new Linker("Background Item")
-  for (i <- 0 to 100) backgroundLinker.link(new Star(screenWidth, screenHeight, random))
+class Background(starter: Entity) extends Entity {
+  private val random = new Random
+  private val image = new Image("gfx/star.png", false, Image.FILTER_NEAREST)
+  for (i <- 0 to 100) starter.link(new Star)
 
-  def update(delta: Int, linker: Linker) {
-    backgroundLinker.update(delta)
-  }
+  private class Star extends Entity {
+    private val speed = 0.2f + random.nextFloat()
+    private val scale = 0.1f + random.nextFloat()
+    private val x = 1440f * random.nextFloat()
+    private var y = -20f
 
-  def render() {
-    backgroundLinker.render()
-  }
-}
+    override def update(implicit gameContainer: GameContainer, delta: Int) {
+      for (i <- 0 until delta) y += speed
 
-class Star(screenWidth: Float, screenHeight: Float, random: Random) extends Entity {
-  private val speed = 0.2f + random.nextFloat()
-  private val image = new Image("gfx/star.png", false, Image.FILTER_NEAREST, Color.green)
-  val scale = random.nextFloat()
-  private val x = screenWidth * random.nextFloat()
-  private var y = -20f
+      if (y > 920f) {
+        link(new Star)
+        unlink()
+      }
 
-  def update(delta: Int, linker: Linker) {
-    y += speed * delta
-    if (y > screenHeight + 20) {
-      link(new Star(screenWidth, screenHeight, random))
-      unlink()
+      updateNext
     }
-  }
 
-  def render() {
-    image.draw(x, y, scale)
+    override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
+      image.draw(x, y, scale)
+      renderNext
+    }
   }
 }

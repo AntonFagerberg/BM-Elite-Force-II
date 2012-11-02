@@ -1,65 +1,34 @@
 package entity
 
-import org.newdawn.slick.{Color, GameContainer}
+import org.newdawn.slick._
+import geom.Rectangle
 
-class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends Entity {
-  private val ship = new Ship(gc, index)
+class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerIndex: Int, var x: Float, var y: Float) extends Entity {
+  private val ship = new Ship
   private val speed = 0.6f
-  private val input = gc.getInput
-
   private var velocityX = 0.0f
   private var velocityY = 0.0f
   private var shootDelay = 0.0f
   private var axisY = 0f
   private var axisX = 0f
 
-  override def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = {
-    if (
-        color != ship.getColor
-      &&
-        ((this.x - ship.hitBoxX) < x._1 && (this.x + ship.hitBoxX) > x._1 || (this.x - ship.hitBoxX) < x._2 && (this.x + ship.hitBoxX) > x._2)
-      &&
-        ((this.y - ship.hitBoxY) < y._1 && (this.y + ship.hitBoxY) > y._1 || (this.y - ship.hitBoxY) < y._2 && (this.y + ship.hitBoxY) > y._2)
-    ) {
-//      hitSound.play()
+  override def update(implicit gameContainer: GameContainer, delta: Int) {
+    if (controllerIndex < gameContainer.getInput.getControllerCount) {
+//      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(index, 5) > 0 && linker.reference(0).isDefined) {
+//        linker.reference(0).get.link(ship.bullet(x, y))
+//        shootDelay = 2.0f
+//      }
 
-//      this.x = 0f
-//      this.y = 0f
-      true
-    } else {
-      false
-    }
-  }
+      axisY = gameContainer.getInput.getAxisValue(controllerIndex, 1)
+      axisX = gameContainer.getInput.getAxisValue(controllerIndex, 0)
 
-  def update(delta: Int, linker: Linker) {
-    ship.update(delta)
+      if (axisY > 0.25 || axisY < -0.25) velocityY = axisY  * speed
+      if (axisX > 0.25 || axisX < -0.25) velocityX = axisX * speed
 
-    if (input.getControllerCount >= index) {
-      if (shootDelay < 0f && input.getAxisValue(index, 5) > 0 && linker.reference(0).isDefined) {
-        linker.reference(0).get.link(ship.bullet(x, y))
-        shootDelay = 2.0f
-      }
-
-      axisY = input.getAxisValue(index, 1)
-      axisX = input.getAxisValue(index, 0)
-
-      if (axisY > 0.25 || axisY < -0.25)
-        velocityY = axisY  * speed
-
-      if (axisX > 0.25 || axisX < -0.25)
-        velocityX = axisX * speed
-
-      if (input.isButtonPressed(11, index) || input.getAxisValue(index, 3) > 0.5)
-        ship.green()
-
-      if (input.isButtonPressed(12, index) || input.getAxisValue(index, 2) > 0.5)
-        ship.red()
-
-      if (input.isButtonPressed(13, index) || input.getAxisValue(index, 2) < -0.5)
-        ship.blue()
-
-      if (input.isButtonPressed(14, index) || input.getAxisValue(index, 3) < -0.5)
-        ship.yellow()
+      if (gameContainer.getInput.isButtonPressed(11, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) > 0.5) ship.green()
+      if (gameContainer.getInput.isButtonPressed(12, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) > 0.5) ship.red()
+      if (gameContainer.getInput.isButtonPressed(13, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) < -0.5) ship.blue()
+      if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) ship.yellow()
     }
 
     for (i <- 0 until delta) {
@@ -85,9 +54,145 @@ class Player(gc: GameContainer, var x: Float, var y: Float, index: Int) extends 
 
       shootDelay = if (shootDelay >= 0) shootDelay - 0.02f else 0f
     }
+
+    ship.update(delta, x, y)
+
+
+
+    updateNext
   }
 
-  def render() {
-    ship.draw(x, y)
+  override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
+    ship.render(graphics, x, y)
+    renderNext
+  }
+
+  private class Ship {
+    private trait HitBox {
+      val hitBoxes: IndexedSeq[Rectangle] = IndexedSeq()
+    }
+
+    private class HitBoxSpeeder extends HitBox {
+      override val hitBoxes = IndexedSeq(new Rectangle(x, y, 30, 80), new Rectangle(x, y, 64, 35))
+
+      def render(graphics: Graphics) {
+        for (hitBox <- hitBoxes) graphics.draw(hitBox)
+      }
+
+      def update(x: Float, y: Float) {
+        hitBoxes(0).setLocation(x - 15, y - ship.marginY)
+        hitBoxes(1).setLocation(x - ship.marginX + 3, y - 17)
+      }
+    }
+
+    private var spriteChange = 0
+    private var spriteIndex = 0
+    private var direction = 0
+    private var color = Color.green
+
+    private val kind = controllerIndex match {
+      case 0 => "speeder"
+      case 1 => "speeder"
+      case _ => println("Called undefined index '" + controllerIndex + "' in Ship.") ; "speeder"
+    }
+
+    private val hitBox = controllerIndex match {
+      case _ => new HitBoxSpeeder
+    }
+
+    private val shipGreen = IndexedSeq(
+      new Image("gfx/green_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/green_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/green_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/green_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/green_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/green_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
+    )
+
+    private val shipYellow = IndexedSeq(
+      new Image("gfx/yellow_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/yellow_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/yellow_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/yellow_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/yellow_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/yellow_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
+    )
+
+    private val shipBlue = IndexedSeq(
+      new Image("gfx/blue_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/blue_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/blue_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/blue_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/blue_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/blue_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
+    )
+
+    private val shipRed = IndexedSeq(
+      new Image("gfx/red_" + kind + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/red_" + kind + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/red_" + kind + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/red_" + kind + "_L_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/red_" + kind + "_R_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
+      new Image("gfx/red_" + kind + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
+    )
+
+    private var shipSprites = shipGreen
+
+    val marginX: Float = shipSprites(0).getWidth / 2f
+    val marginY: Float = shipSprites(0).getHeight / 2f
+//    private val bulletSound = new Sound("sfx/bullet.wav")
+
+    def forward() {
+      direction = 0
+    }
+
+    def left() {
+      direction = 2
+    }
+
+    def right() {
+      direction = 4
+    }
+
+    def green() {
+      shipSprites = shipGreen
+      color = Color.green
+    }
+
+    def red() {
+      color = Color.red
+      shipSprites = shipRed
+    }
+
+    def blue() {
+      color = Color.blue
+      shipSprites = shipBlue
+    }
+
+    def yellow() {
+      shipSprites = shipYellow
+      color = Color.yellow
+    }
+
+    def getColor = color
+
+//    def bullet(x: Float, y: Float): Entity = {
+//      bulletSound.play(1.0f, 0.5f)
+//      new Bullet(x, y - halfHeight, color)
+//    }
+
+    def update(delta: Int, x: Float, y: Float) {
+      spriteChange += delta
+      if (spriteChange > 50) {
+        spriteChange = 0
+        spriteIndex = if (spriteIndex == 0) 1 else 0
+      }
+      hitBox.update(x, y)
+    }
+
+    def render(graphics: Graphics, x: Float, y: Float) {
+      shipSprites(direction + spriteIndex).drawCentered(x, y)
+      hitBox.render(graphics)
+    }
   }
 }

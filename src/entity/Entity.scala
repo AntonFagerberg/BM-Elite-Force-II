@@ -1,40 +1,42 @@
 package entity
 
-import org.newdawn.slick.Color
+import org.newdawn.slick.{Graphics, GameContainer}
+import org.newdawn.slick.geom.Shape
 
 trait Entity {
-  private var next: Option[Entity] = None
-  private var previous: Option[Entity] = None
+  private var nextEntity: Option[Entity] = None
+  private var previousEntity: Option[Entity] = None
 
-  def update(delta: Int, linker: Linker)
+  def next = nextEntity
+  def previous = previousEntity
 
-  def render()
-
-  def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = {
-    println("Called collision on Entity which does not implement it.")
-    false
+  def update(implicit gameContainer: GameContainer, delta: Int) {
+    updateNext
   }
 
-  def link(newEntity: Entity) {
-    if (next.isDefined) {
-      newEntity.next = next
-      next.get.previous = Some(newEntity)
-    }
+  final def updateNext(implicit gameContainer: GameContainer, delta: Int) {
+    if (nextEntity.isDefined) nextEntity.get.update(gameContainer, delta)
+  }
 
-    next = Some(newEntity)
-    newEntity.previous = Some(this)
+  def render(implicit gameContainer: GameContainer, graphics: Graphics) {
+    renderNext
+  }
+
+  final def renderNext(implicit gameContainer: GameContainer, graphics: Graphics) {
+    if (nextEntity.isDefined) nextEntity.get.render(gameContainer, graphics)
+  }
+
+  def collision(hitBoxes: List[Shape]): Boolean = false
+
+  def link(entity: Entity) {
+    if (nextEntity.isDefined) nextEntity.get.previousEntity = Some(entity)
+    entity.nextEntity = nextEntity
+    nextEntity = Some(entity)
+    entity.previousEntity = Some(this)
   }
 
   def unlink() {
-    previous.get.next = next
-    if (next.isDefined) {
-      next.get.previous = previous
-    }
+    if (nextEntity.isDefined) nextEntity.get.previousEntity = previousEntity
+    if (previousEntity.isDefined) previousEntity.get.nextEntity = nextEntity
   }
-
-  def newLink(newEntity: Option[Entity]) {
-    next = newEntity
-  }
-
-  def getNext: Option[Entity] = next
 }
