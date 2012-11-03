@@ -15,10 +15,11 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
     if (controllerIndex < gameContainer.getInput.getControllerCount && controllerIndex >= 0) {
-//      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(index, 5) > 0 && linker.reference(0).isDefined) {
-//        linker.reference(0).get.link(ship.bullet(x, y))
-//        shootDelay = 2.0f
-//      }
+      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(controllerIndex, 5) > 0) {
+        bulletStarter.link(new Bullet(x + 20, y - 15, ship.getColor))
+        bulletStarter.link(new Bullet(x - 20, y - 15, ship.getColor))
+        shootDelay = 2.0f
+      }
 
       axisY = gameContainer.getInput.getAxisValue(controllerIndex, 1)
       axisX = gameContainer.getInput.getAxisValue(controllerIndex, 0)
@@ -32,7 +33,7 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
       if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) ship.yellow()
     } else if (controllerIndex == -1) {
       if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) {
-        println("PEW!")
+        bulletStarter.link(new Bullet(x, y, ship.getColor))
         bulletStarter.link(new Bullet(x, y, ship.getColor))
         shootDelay = 2.0f
       }

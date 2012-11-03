@@ -1,11 +1,13 @@
 package entity
 
 import org.newdawn.slick.{Graphics, GameContainer, Color, Image}
-import org.newdawn.slick.geom.Rectangle
+import org.newdawn.slick.geom.{Transform, Rectangle}
 
 class Bullet(var x: Float, var y: Float, color: Color, speedX: Float = 0f, speedY: Float = -1.3f, angle: Float = 0f) extends Entity {
   private val sprite = new Image("gfx/bullet.png")
-  private val hitBox = new Rectangle(x - 10, y - 50, 20, 40)
+  private val yOffset = 14f
+  private val xOffset = 7f
+  private val hitBox = new Rectangle(x - xOffset, y - yOffset, 15, 30)
   sprite.setRotation(angle)
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
@@ -16,14 +18,14 @@ class Bullet(var x: Float, var y: Float, color: Color, speedX: Float = 0f, speed
         x += speedX
       }
 
-      hitBox.setLocation(x - 10, y - 50)
+      hitBox.setLocation(x - xOffset, y - yOffset)
       updateNext
     }
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
-    sprite.draw(x - 15, y - 60, color)
-    graphics.draw(hitBox)
+    sprite.draw(x - sprite.getWidth / 2f, y - sprite.getHeight / 2f, color)
+    graphics.draw(hitBox.transform(Transform.createRotateTransform(math.toRadians(angle).toFloat, hitBox.getX + xOffset, hitBox.getY + yOffset)))
     renderNext
   }
 }
