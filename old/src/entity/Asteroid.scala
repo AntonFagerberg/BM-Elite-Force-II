@@ -17,7 +17,7 @@ class Asteroid(kind: String, random: Random) extends Entity {
   val collisionWidth = image.getWidth * 0.35f
   val randomRotate = randomSpeedY * 0.5f * (if (random.nextBoolean()) -1 else 1)
   var health = 2f + randomSize
-  val hitSound = new Sound("sfx/asteroid_hit.wav")
+  val hitSound = new Sound("sfx/hit.wav")
 
   def update(delta: Int, linker: Linker) {
     image.rotate(randomRotate * delta)

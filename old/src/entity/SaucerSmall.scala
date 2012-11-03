@@ -12,7 +12,7 @@ class SaucerSmall(random: Random) extends Entity {
   val collisionWidth = image.getWidth * 0.35f
 
   var health = 10f
-  val hitSound = new Sound("sfx/asteroid_hit.wav")
+  val hitSound = new Sound("sfx/hit.wav")
 
   def update(delta: Int, linker: Linker) {
     image.rotate(0.1f * delta)

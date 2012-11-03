@@ -192,7 +192,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
     }
 
     def fire() {
-      bulletSound.play()
+      bulletSound.play(1f, 0.6f)
       bulletStarter.link(new Bullet(x + 20, y - 15, ship.getColor, enemyStarter))
       bulletStarter.link(new Bullet(x - 20, y - 15, ship.getColor, enemyStarter))
       shootDelay = 2.0f

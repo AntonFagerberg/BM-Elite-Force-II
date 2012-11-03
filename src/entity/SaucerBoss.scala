@@ -1,14 +1,14 @@
 package entity
 
-import org.newdawn.slick.{Graphics, Color, Sound, Image}
-import util.Random
+import org.newdawn.slick._
+import geom.{Shape, Circle}
 
-class SaucerBoss extends Entity {
+class SaucerBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
+  private val bulletStarter = new Starter
   private val expandSound = new Sound("sfx/saucer_boss_expand.wav")
-  private val hitSound = new Sound("sfx/hit.wav")
-  private var bullets: Option[Linker] = None
   private val x = 720f
   private var y = -450f
+  private val hitBox = new Circle(x, y, 80f)
   private var health = 450f
   private var bulletDelay = 100
   private var rotationRadians = 0d
@@ -25,7 +25,7 @@ class SaucerBoss extends Entity {
   private var superDelta = 0
   private var spriteChange = 0
 
-  private val sprites = IndexedSeq(
+  private val sprites = Vector(
     new Image("gfx/saucer_boss_inactive_1.png", false, Image.FILTER_NEAREST).getScaledCopy(5f),
     new Image("gfx/saucer_boss_inactive_2.png", false, Image.FILTER_NEAREST).getScaledCopy(5f),
     new Image("gfx/saucer_boss_inactive_3.png", false, Image.FILTER_NEAREST).getScaledCopy(5f),
@@ -35,12 +35,23 @@ class SaucerBoss extends Entity {
     new Image("gfx/saucer_boss_active_3.png", false, Image.FILTER_NEAREST).getScaledCopy(5f)
   )
 
-  private val collisionHeight = sprites.head.getHeight * 0.35f
-  private val collisionWidth = sprites.head.getWidth * 0.35f
   private var sprite = sprites.head
   private val explosion = new Sound("sfx/explosion_big.wav")
 
-  def update(delta: Int, linker: Linker) {
+  override def collision(implicit hitBoxes: List[Shape], color: Color = Color.white): Boolean = {
+    if (superDelta >= 13727 && hitBoxes.exists(_.intersects(hitBox))) {
+      health -= 0.2f
+      if (health <= 0) {
+        neutralStarter.link(new Explosion(x, y, 10f))
+        unlink()
+      }
+      true
+    } else {
+      false
+    }
+  }
+
+  override def update(implicit gameContainer: GameContainer, delta: Int) {
     superDelta += delta
 
     if (superDelta <= 6892) {
@@ -89,13 +100,10 @@ class SaucerBoss extends Entity {
           angle3 = rotationRadians + -1.53d
           angle3cos = math.cos(angle3).toFloat
           angle3sin = math.sin(angle3).toFloat
-          if (bullets.isEmpty) bullets = linker.reference(0)
 
-          if (bullets.isDefined) {
-            bullets.get.link(new Bullet(x + 100f * angle1cos, y + 100f * angle1sin, Color.red, angle1cos, angle1sin, 90f + (angle1 * 180d / math.Pi).toFloat))
-            bullets.get.link(new Bullet(x + 100f * angle2cos, y + 100f * angle2sin, Color.green, angle2cos, angle2sin, 90f + (angle2 * 180d / math.Pi).toFloat))
-            bullets.get.link(new Bullet(x + 100f * angle3cos, y + 100f * angle3sin, Color.yellow, angle3cos, angle3sin, 90f + (angle3 * 180d / math.Pi).toFloat))
-          }
+          bulletStarter.link(new Bullet(x + 100f * angle1cos, y + 100f * angle1sin, Color.red, playerStarter, angle1cos, angle1sin, 90f + (angle1 * 180d / math.Pi).toFloat))
+          bulletStarter.link(new Bullet(x + 100f * angle2cos, y + 100f * angle2sin, Color.green, playerStarter, angle2cos, angle2sin, 90f + (angle2 * 180d / math.Pi).toFloat))
+          bulletStarter.link(new Bullet(x + 100f * angle3cos, y + 100f * angle3sin, Color.yellow, playerStarter, angle3cos, angle3sin, 90f + (angle3 * 180d / math.Pi).toFloat))
           bulletDelay += 50
         }
       }
@@ -105,30 +113,14 @@ class SaucerBoss extends Entity {
       if (y < 450) y += 0.2f
       else if(y != 450) y = 450
     }
+
+    hitBox.setLocation(x - 80f, y - 80f)
+    bulletStarter.linkedUpdate
   }
 
-  override def collision(x: (Float, Float), y: (Float, Float), color: Color): Boolean = {
-    if (
-    ((this.x - collisionWidth) < x._1 && (this.x + collisionWidth) > x._1 || (this.x - collisionWidth) < x._2 && (this.x + collisionWidth) > x._2)
-    &&
-    ((this.y - collisionHeight) < y._1 && (this.y + collisionHeight) > y._1 || (this.y - collisionHeight) < y._2 && (this.y + collisionHeight) > y._2)
-    ) {
-      hitSound.play()
-
-      if (health <= 0) {
-        explosion.play()
-        unlink()
-        true
-      } else {
-        health -= 1
-        true
-      }
-    } else {
-      false
-    }
-  }
-
-  def render(graphics: Graphics) {
+  override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
+    bulletStarter.linkedRender
     sprite.drawCentered(x, y)
+    graphics.draw(hitBox)
   }
 }
