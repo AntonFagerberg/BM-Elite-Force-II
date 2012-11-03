@@ -10,7 +10,7 @@ class TestBox extends Entity {
     graphics.draw(box)
   }
 
-  override def collision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Boolean = {
+  override def collision(implicit hitBoxes: List[Shape], color: Color = Color.white): Boolean = {
     hitBoxes.exists(_ intersects(box))
   }
 }

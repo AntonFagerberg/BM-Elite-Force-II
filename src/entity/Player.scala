@@ -1,9 +1,11 @@
 package entity
 
 import org.newdawn.slick._
-import geom.Rectangle
+import geom.{Shape, Rectangle}
 
-class Player(gameContainer: GameContainer, hostileStarter: Entity, neutralStarter: Entity, controllerIndex: Int, var x: Float, var y: Float) extends Entity {
+class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter: Entity, controllerIndex: Int) extends Entity {
+  private var x = 450f
+  private var y = 1400f
   private val bulletStarter = new Starter
   private val ship = new Ship
   private val speed = 0.6f
@@ -14,14 +16,12 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, neutralStarte
   private var axisX = 0f
   private val bulletSound = new Sound("sfx/bullet.wav")
 
+  override def collision(implicit hitBoxes: List[Shape], color: Color): Boolean = {
+    ship.collision
+  }
+
   override def update(implicit gameContainer: GameContainer, delta: Int) {
     if (controllerIndex < gameContainer.getInput.getControllerCount && controllerIndex >= 0) {
-      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(controllerIndex, 5) > 0) {
-        bulletSound.play()
-        bulletStarter.link(new Bullet(x + 20, y - 15, ship.getColor))
-        bulletStarter.link(new Bullet(x - 20, y - 15, ship.getColor))
-        shootDelay = 2.0f
-      }
 
       axisY = gameContainer.getInput.getAxisValue(controllerIndex, 1)
       axisX = gameContainer.getInput.getAxisValue(controllerIndex, 0)
@@ -29,17 +29,18 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, neutralStarte
       if (axisY > 0.25 || axisY < -0.25) velocityY = axisY  * speed
       if (axisX > 0.25 || axisX < -0.25) velocityX = axisX * speed
 
+      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(controllerIndex, 5) > 0) ship.fire()
       if (gameContainer.getInput.isButtonPressed(11, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) > 0.5) ship.green()
-      if (gameContainer.getInput.isButtonPressed(12, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) > 0.5) ship.red()
-      if (gameContainer.getInput.isButtonPressed(13, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) < -0.5) ship.blue()
-      if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) ship.yellow()
+      else if (gameContainer.getInput.isButtonPressed(12, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) > 0.5) ship.red()
+      else if (gameContainer.getInput.isButtonPressed(13, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) < -0.5) ship.blue()
+      else if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) ship.yellow()
     } else if (controllerIndex == -1) {
-      if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) {
-        bulletSound.play()
-        bulletStarter.link(new Bullet(x, y, ship.getColor))
-        bulletStarter.link(new Bullet(x, y, ship.getColor))
-        shootDelay = 2.0f
-      }
+
+      if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) ship.fire()
+      if (gameContainer.getInput.isKeyDown(Input.KEY_S)) ship.green()
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_D)) ship.red()
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_A)) ship.blue()
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_W)) ship.yellow()
 
       if (gameContainer.getInput.isKeyDown(Input.KEY_UP)) velocityY = -speed
       else if (gameContainer.getInput.isKeyDown(Input.KEY_DOWN)) velocityY = speed
@@ -99,6 +100,7 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, neutralStarte
       }
     }
 
+    private var deadDelta = Int.MinValue
     private var spriteChange = 0
     private var spriteIndex = 0
     private var direction = 0
@@ -189,14 +191,48 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, neutralStarte
       color = Color.yellow
     }
 
+    def fire() {
+      bulletSound.play()
+      bulletStarter.link(new Bullet(x + 20, y - 15, ship.getColor, enemyStarter))
+      bulletStarter.link(new Bullet(x - 20, y - 15, ship.getColor, enemyStarter))
+      shootDelay = 2.0f
+    }
+
     def getColor: Color = color
+    def getHitBoxes: List[Shape] = hitBox.hitBoxes
+
+    def collision(implicit hitBoxes: List[Shape], color: Color): Boolean = {
+      if (deadDelta <= 0 && ship.getColor != color && hitBoxes.exists(h => ship.getHitBoxes.exists(h.intersects(_)))) {
+        explode()
+        shipRed.foreach(_.setAlpha(0.5f))
+        shipGreen.foreach(_.setAlpha(0.5f))
+        shipBlue.foreach(_.setAlpha(0.5f))
+        shipYellow.foreach(_.setAlpha(0.5f))
+        true
+      } else {
+        false
+      }
+    }
+
+    def explode() {
+      neutralStarter.link(new Explosion(x, y, 3f))
+      deadDelta = 2500
+      x = 450
+      y = 1440
+    }
 
     def update(delta: Int) {
-      if (hostileStarter.linkedCollision(hitBox.hitBoxes, Some(color)) > 0) {
-        neutralStarter.link(new Explosion(x, y, 3f))
-        x = 500
-        y = 500
-//        unlink()
+      if (deadDelta > 0) deadDelta -= delta
+      else if (deadDelta != Int.MinValue) {
+        shipGreen.foreach(_.setAlpha(1f))
+        shipBlue.foreach(_.setAlpha(1f))
+        shipYellow.foreach(_.setAlpha(1f))
+        shipRed.foreach(_.setAlpha(1f))
+        deadDelta = Int.MinValue
+      }
+
+      if (enemyStarter.linkedCollision(hitBox.hitBoxes, color) > 0) {
+        explode()
       }
 
       spriteChange += delta

@@ -13,6 +13,10 @@ class Background extends Entity {
     starter.linkedUpdate
   }
 
+  override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
+    starter.linkedRender
+  }
+
   private class Star extends Entity {
     private val speed = 0.2f + random.nextFloat()
     private val scale = 0.1f + random.nextFloat()

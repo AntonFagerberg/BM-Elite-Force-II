@@ -28,11 +28,14 @@ class Intro extends Level {
   def update(implicit gameContainer: GameContainer, delta: Int) {
     levelDelta += delta
 
-    if (levelDelta > 36815)
-      background.linkedUpdate
+  if (gameContainer.getInput.isKeyPressed(Input.KEY_SPACE))
+      println(levelDelta)
+
+    if (levelDelta > 34340)
+      background.update
 
     for (i <- 0 until delta) {
-      if (levelDelta >= 36815) {
+      if (levelDelta >= 34340) {
         if (iY > -100 && levelDelta < 43000)
           iY -= 0.5f
 
@@ -45,18 +48,19 @@ class Intro extends Level {
         textY += 0.5f
       }
 
-      if (levelDelta >= 50041 && levelDelta < 62000) {
+      if (levelDelta >= 45041 && levelDelta < 60000) {
         iX = 710f
         if (iY < 910)
           iY += 0.1f
       }
 
-      if (levelDelta >= 62023) {
+      if (levelDelta >= 60023) {
         if (bmY <= 200f)
           bmY += 0.1f
       }
 
-      if (levelDelta >= 67216) {
+
+      if (levelDelta >= 65040) {
         if (iX < 935f)
           iX = 935f
 
@@ -72,22 +76,35 @@ class Intro extends Level {
   def render(implicit gameContainer: GameContainer, graphics: Graphics) {
     bm.draw(415f, bmY)
 
-    if (levelDelta >= 24432)
+    if (levelDelta >= 21900)
       nama.draw(150f, textY)
 
-    if (levelDelta >= 27157) {
+    if (levelDelta >= 24613) {
       biiru.draw(400f, textY)
       i(index).draw(iX, iY)
       i(index).draw(iX + 20f, iY)
     }
 
-    if (levelDelta >= 29861)
+    if (levelDelta >= 27317)
       mitsu.draw(630f, textY)
 
-    if (levelDelta >= 32494)
+    if (levelDelta >= 29965)
       kudasai.draw(1030f, textY)
 
-    if (levelDelta > 36815)
-      background.linkedRender
+    if (levelDelta > 34340)
+      background.render
   }
 }
+
+/**
+11228
+13926
+16661
+19365
+21981
+24613
+27317
+29965
+34340
+65140
+  */
