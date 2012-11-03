@@ -5,24 +5,22 @@ import entity.{Starter, Background}
 
 class Intro extends Level {
   private val music = new Music("msc/intro.ogg")
-  private val backgroundStarter = new Starter
   private val nama = new Image("gfx/nama.png", false, Image.FILTER_NEAREST)
   private val biiru = new Image("gfx/biiru.png", false, Image.FILTER_NEAREST)
   private val mitsu = new Image("gfx/mitsu.png", false, Image.FILTER_NEAREST)
   private val kudasai = new Image("gfx/kudasai.png", false, Image.FILTER_NEAREST)
   private val bm = new Image("gfx/bm_elite_force.png", false, Image.FILTER_NEAREST)
+  private val background = new Background
   private val i = IndexedSeq(
     new Image("gfx/i_1.png", false, Image.FILTER_NEAREST),
     new Image("gfx/i_2.png", false, Image.FILTER_NEAREST)
   )
-
   private var index = 0
   private var indexCount = -1
   private var textY = 400f
   private var iY = 400f
   private var iX = 440f
   private var bmY = -100f
-  private var loadedBackground = false
 
   music.play()
   private var levelDelta = 0L
@@ -30,13 +28,8 @@ class Intro extends Level {
   def update(implicit gameContainer: GameContainer, delta: Int) {
     levelDelta += delta
 
-  if (gameContainer.getInput.isKeyPressed(Input.KEY_SPACE))
-      println(levelDelta)
-
-    if (levelDelta > 36815 && !loadedBackground) {
-      new Background(backgroundStarter)
-      loadedBackground = true
-    }
+    if (levelDelta > 36815)
+      background.linkedUpdate
 
     for (i <- 0 until delta) {
       if (levelDelta >= 36815) {
@@ -63,7 +56,6 @@ class Intro extends Level {
           bmY += 0.1f
       }
 
-
       if (levelDelta >= 67216) {
         if (iX < 935f)
           iX = 935f
@@ -75,8 +67,6 @@ class Intro extends Level {
       }
 
     }
-
-    backgroundStarter.update
   }
 
   def render(implicit gameContainer: GameContainer, graphics: Graphics) {
@@ -97,6 +87,7 @@ class Intro extends Level {
     if (levelDelta >= 32494)
       kudasai.draw(1030f, textY)
 
-    backgroundStarter.render
+    if (levelDelta > 36815)
+      background.linkedRender
   }
 }

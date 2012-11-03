@@ -3,10 +3,15 @@ package entity
 import util.Random
 import org.newdawn.slick.{Graphics, GameContainer, Image}
 
-class Background(starter: Entity) extends Entity {
+class Background extends Entity {
   private val random = new Random
   private val image = new Image("gfx/star.png", false, Image.FILTER_NEAREST)
+  private val starter = new Starter
   for (i <- 0 to 100) starter.link(new Star)
+
+  override def update(implicit gameContainer: GameContainer, delta: Int) {
+    starter.linkedUpdate
+  }
 
   private class Star extends Entity {
     private val speed = 0.2f + random.nextFloat()
@@ -21,13 +26,10 @@ class Background(starter: Entity) extends Entity {
         link(new Star)
         unlink()
       }
-
-      updateNext
     }
 
     override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
       image.draw(x, y, scale)
-      renderNext
     }
   }
 }

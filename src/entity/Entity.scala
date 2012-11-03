@@ -10,20 +10,21 @@ trait Entity {
   def next = nextEntity
   def previous = previousEntity
 
-  def update(implicit gameContainer: GameContainer, delta: Int) {
-    updateNext
+  def update(implicit gameContainer: GameContainer, delta: Int) {}
+  def render(implicit gameContainer: GameContainer, graphics: Graphics) {}
+  def collision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Boolean = {
+    println("Called collision on Entity which does not implement it.")
+    false
   }
 
-  final def updateNext(implicit gameContainer: GameContainer, delta: Int) {
-    if (nextEntity.isDefined) nextEntity.get.update(gameContainer, delta)
+  final def linkedUpdate(implicit gameContainer: GameContainer, delta: Int) {
+    update
+    if (nextEntity.isDefined) nextEntity.get.linkedUpdate
   }
 
-  def render(implicit gameContainer: GameContainer, graphics: Graphics) {
-    renderNext
-  }
-
-  final def renderNext(implicit gameContainer: GameContainer, graphics: Graphics) {
-    if (nextEntity.isDefined) nextEntity.get.render(gameContainer, graphics)
+  final def linkedRender(implicit gameContainer: GameContainer, graphics: Graphics) {
+    render
+    if (nextEntity.isDefined) nextEntity.get.linkedRender
   }
 
   def linkedCollision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Int = {
@@ -32,8 +33,6 @@ trait Entity {
     else if (collision) 1
     else 0
   }
-
-  def collision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Boolean = false
 
   def link(entity: Entity) {
     if (nextEntity.isDefined) nextEntity.get.previousEntity = Some(entity)

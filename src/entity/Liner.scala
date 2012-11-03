@@ -1,9 +1,9 @@
 package entity
 
 import org.newdawn.slick.{Color, Graphics, GameContainer, Image}
-import org.newdawn.slick.geom.{Transform, Rectangle}
+import org.newdawn.slick.geom.{Shape, Transform, Rectangle}
 
-class Liner(var x: Float, var y: Float, destructable: Boolean, colors: Vector[Color], colorSwitch: Int = 0, angle: Float = 0f, speedX: Float = 0f, speedY: Float = 0f, speedRotation: Float = 0f, bulletSpeed: Float = 1f) extends Entity {
+class Liner(var x: Float, var y: Float, destroyable: Boolean, colors: Vector[Color], neutralStarter: Entity, colorSwitch: Int = 0, angle: Float = 0f, speedX: Float = 0f, speedY: Float = 0f, speedRotation: Float = 0f, bulletSpeed: Float = 1f) extends Entity {
   private var bulletDelay = 0
   private var angleRotation = 0d
   private var angleCos = 0f
@@ -12,12 +12,15 @@ class Liner(var x: Float, var y: Float, destructable: Boolean, colors: Vector[Co
   private var colorCounter = 0
   private val sprite = new Image("gfx/liner_white_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2f)
   private val bulletStarter = new Starter
+  private val hitBox = new Rectangle(x - sprite.getWidth / 2, y - sprite.getHeight / 2, sprite.getWidth, sprite.getHeight)
   sprite.rotate(angle)
 
-  private val hitBox = new Rectangle(x - sprite.getWidth / 2, y - sprite.getHeight / 2, sprite.getWidth, sprite.getHeight)
+  override def collision(implicit hitBoxes: List[Shape], color: Option[Color] = None): Boolean = {
+    val rotatedHitBox = hitBox.transform(Transform.createRotateTransform(math.toRadians(sprite.getRotation).toFloat, x, y))
+    hitBoxes.exists(_.intersects(rotatedHitBox))
+  }
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
-    println(sprite.getRotation)
     if (y < -50f || y > 950f || x < - 50f || x > 1490f) unlink()
     else {
       for (i <- 0 until delta) {
@@ -41,16 +44,13 @@ class Liner(var x: Float, var y: Float, destructable: Boolean, colors: Vector[Co
         }
       }
 
-      bulletStarter.update
+      bulletStarter.linkedUpdate
     }
-
-    updateNext
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
     graphics.draw(hitBox.transform(Transform.createRotateTransform(math.toRadians(sprite.getRotation).toFloat, x, y)))
     sprite.drawCentered(x, y)
-    bulletStarter.render
-    renderNext
+    bulletStarter.linkedRender
   }
 }

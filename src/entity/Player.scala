@@ -3,7 +3,7 @@ package entity
 import org.newdawn.slick._
 import geom.Rectangle
 
-class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerIndex: Int, var x: Float, var y: Float) extends Entity {
+class Player(gameContainer: GameContainer, hostileStarter: Entity, neutralStarter: Entity, controllerIndex: Int, var x: Float, var y: Float) extends Entity {
   private val bulletStarter = new Starter
   private val ship = new Ship
   private val speed = 0.6f
@@ -12,10 +12,12 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
   private var shootDelay = 0.0f
   private var axisY = 0f
   private var axisX = 0f
+  private val bulletSound = new Sound("sfx/bullet.wav")
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
     if (controllerIndex < gameContainer.getInput.getControllerCount && controllerIndex >= 0) {
       if (shootDelay < 0f && gameContainer.getInput.getAxisValue(controllerIndex, 5) > 0) {
+        bulletSound.play()
         bulletStarter.link(new Bullet(x + 20, y - 15, ship.getColor))
         bulletStarter.link(new Bullet(x - 20, y - 15, ship.getColor))
         shootDelay = 2.0f
@@ -33,6 +35,7 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
       if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) ship.yellow()
     } else if (controllerIndex == -1) {
       if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) {
+        bulletSound.play()
         bulletStarter.link(new Bullet(x, y, ship.getColor))
         bulletStarter.link(new Bullet(x, y, ship.getColor))
         shootDelay = 2.0f
@@ -68,26 +71,23 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
       shootDelay = if (shootDelay >= 0) shootDelay - 0.02f else 0f
     }
 
-    ship.update(delta, x, y)
-    bulletStarter.update
-    updateNext
+    ship.update(delta)
+    bulletStarter.linkedUpdate
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
-    ship.render(graphics, x, y)
-    bulletStarter.render
-    renderNext
+    ship.render(graphics)
+    bulletStarter.linkedRender
   }
 
   private class Ship {
-//    private trait HitBox {
-//      val hitBoxes: List[Rectangle] = IndexedSeq()
-//    }
+    private trait HitBox {
+      def render(graphics: Graphics)
+      def update(x: Float, y: Float)
+    }
 
-    private class HitBoxSpeeder /*extends HitBox*/ {
-      /*override*/ val hitBoxes = List(new Rectangle(x, y, 30, 80), new Rectangle(x, y, 64, 35))
-
-      def getHitBoxes = hitBoxes
+    private class HitBoxSpeeder extends HitBox {
+      val hitBoxes = List(new Rectangle(x, y, 30, 80), new Rectangle(x, y, 64, 35))
 
       def render(graphics: Graphics) {
         for (hitBox <- hitBoxes) graphics.draw(hitBox)
@@ -107,12 +107,13 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
     private val kind = controllerIndex match {
       case -1 => "speeder"
       case 0 => "speeder"
-      case 1 => "speeder"
       case _ => println("Called undefined index '" + controllerIndex + "' in Ship.") ; "speeder"
     }
 
     private val hitBox = controllerIndex match {
-      case _ => new HitBoxSpeeder
+      case -1 => new HitBoxSpeeder
+      case 0 => new HitBoxSpeeder
+      case _ => println("Called undefined index '" + controllerIndex + "' in Ship.") ; new HitBoxSpeeder
     }
 
     private val shipGreen = IndexedSeq(
@@ -155,7 +156,6 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
 
     val marginX: Float = shipSprites(0).getWidth / 2f
     val marginY: Float = shipSprites(0).getHeight / 2f
-//    private val bulletSound = new Sound("sfx/bullet.wav")
 
     def forward() {
       direction = 0
@@ -191,23 +191,24 @@ class Player(gameContainer: GameContainer, hostileStarter: Entity, controllerInd
 
     def getColor: Color = color
 
-//    def bullet(x: Float, y: Float): Entity = {
-//      bulletSound.play(1.0f, 0.5f)
-//      new Bullet(x, y - halfHeight, color)
-//    }
-
-    def update(delta: Int, x: Float, y: Float) {
-      if (hostileStarter.linkedCollision(hitBox.getHitBoxes, Some(color)) > 0) println("hit!")
+    def update(delta: Int) {
+      if (hostileStarter.linkedCollision(hitBox.hitBoxes, Some(color)) > 0) {
+        neutralStarter.link(new Explosion(x, y, 3f))
+        x = 500
+        y = 500
+//        unlink()
+      }
 
       spriteChange += delta
       if (spriteChange > 50) {
         spriteChange = 0
         spriteIndex = if (spriteIndex == 0) 1 else 0
       }
+
       hitBox.update(x, y)
     }
 
-    def render(graphics: Graphics, x: Float, y: Float) {
+    def render(graphics: Graphics) {
       shipSprites(direction + spriteIndex).drawCentered(x, y)
       hitBox.render(graphics)
     }
