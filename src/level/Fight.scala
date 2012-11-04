@@ -30,7 +30,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 
   private def initialize() {
     backgroundStarter.link(new Background)
-//    neutralStarter.link(new Text(1))
+    neutralStarter.link(new Text(1))
 
     if (gameContainer.getInput.getControllerCount > 0)
       for (i <- 0 until gameContainer.getInput.getControllerCount)
@@ -38,7 +38,8 @@ class Fight(gameContainer: GameContainer) extends Level {
     else
       playerStarter.link(new Player(gameContainer, enemyStarter, neutralStarter, -1))
 
-    /*enemyStack(0) push 41201l -> new SaucerBoss(playerStarter, neutralStarter)
+//    /*
+    enemyStack(0) push 41201l -> new SaucerBoss(playerStarter, neutralStarter)
 
     enemyStack(0) push 31500l -> new Liner(680f, -50f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f)
     enemyStack(0) push 31500l -> new Liner(760f, -50f, Vector(Color.white), playerStarter, neutralStarter, angle = 90f, speedY = 0.15f, destroyable = true)
@@ -53,7 +54,26 @@ class Fight(gameContainer: GameContainer) extends Level {
 
     enemyStack(0) push 6000l -> new Liner(1430f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = -90f, speedY = 0.2f)
     enemyStack(0) push 6000l -> new Liner(10f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = 90f, speedY = 0.2f)
-       */
+//       */
+
+    /*
+    109831
+113268
+116676
+120057
+123468
+126924
+130404
+133764
+168131
+171587
+174908
+178356
+181763
+185257
+188660
+192068
+     */
 
     //82813 lite tidigare
 
@@ -115,10 +135,10 @@ class Fight(gameContainer: GameContainer) extends Level {
     while (enemyStack(levelPart).headOption.isDefined && enemyStack(levelPart).head._1 <= superDelta)
       enemyStarter.link(enemyStack(levelPart).pop()._2)
 
-    /*if (superDelta > 39000l && !checkPoints(0)) {
+    if (superDelta > 39000l && !checkPoints(0)) {
       checkPoints(0) = true
       neutralStarter.link(new Text(2))
-    } else*/ if (!checkPoints(1) && enemyStack(0).headOption.isEmpty && enemyStarter.next.isEmpty) {
+    } else if (!checkPoints(1) && enemyStack(0).headOption.isEmpty && enemyStarter.next.isEmpty) {
       music(0).setVolume(music(0).getVolume - 0.0003f * delta)
       if (music(0).getVolume <= 0) {
         superDelta = 0
@@ -129,7 +149,7 @@ class Fight(gameContainer: GameContainer) extends Level {
         neutralStarter.link(new Text(3))
         levelPart += 1
       }
-    } else if (!checkPoints(2) && superDelta >= 48299L) {
+    } else if (checkPoints(1) && !checkPoints(2) && superDelta >= 48299L) {
       neutralStarter.link(new Text(4))
       checkPoints(2) = true
     }

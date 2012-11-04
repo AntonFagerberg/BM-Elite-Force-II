@@ -246,7 +246,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
 
     def render(graphics: Graphics) {
       shipSprites(direction + spriteIndex).drawCentered(x, y)
-      hitBox.render(graphics)
+//      hitBox.render(graphics)
     }
   }
 }

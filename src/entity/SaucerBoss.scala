@@ -121,6 +121,6 @@ class SaucerBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
     bulletStarter.linkedRender
     sprite.drawCentered(x, y)
-    graphics.draw(hitBox)
+//    graphics.draw(hitBox)
   }
 }

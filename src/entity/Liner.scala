@@ -62,7 +62,7 @@ class Liner(var x: Float, var y: Float, colors: Vector[Color], playerStarter: En
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
-    graphics.draw(hitBox.transform(Transform.createRotateTransform(math.toRadians(sprite.getRotation).toFloat, x, y)))
+//    graphics.draw(hitBox.transform(Transform.createRotateTransform(math.toRadians(sprite.getRotation).toFloat, x, y)))
     sprite.drawCentered(x, y)
     bulletStarter.linkedRender
   }

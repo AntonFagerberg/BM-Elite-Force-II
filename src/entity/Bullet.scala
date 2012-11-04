@@ -38,6 +38,6 @@ class Bullet(var x: Float, var y: Float, color: Color, collisionStarter: Entity,
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
     sprite.draw(x - sprite.getWidth / 2f, y - sprite.getHeight / 2f, color)
-    graphics.draw(hitBox.transform(Transform.createRotateTransform(math.toRadians(angle).toFloat, hitBox.getX + xOffset, hitBox.getY + yOffset)))
+//    graphics.draw(hitBox.transform(Transform.createRotateTransform(math.toRadians(angle).toFloat, hitBox.getX + xOffset, hitBox.getY + yOffset)))
   }
 }
