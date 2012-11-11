@@ -30,7 +30,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 
   private def initialize() {
     backgroundStarter.link(new Background)
-    neutralStarter.link(new Text(1))
+//    neutralStarter.link(new Text(1))
 
     if (gameContainer.getInput.getControllerCount > 0)
       for (i <- 0 until gameContainer.getInput.getControllerCount)
@@ -38,7 +38,9 @@ class Fight(gameContainer: GameContainer) extends Level {
     else
       playerStarter.link(new Player(gameContainer, enemyStarter, neutralStarter, -1))
 
-//    /*
+    enemyStack(0) push 0l -> new BioSmall(720, -100, playerStarter, neutralStarter)
+
+    /*
     enemyStack(0) push 41201l -> new SaucerBoss(playerStarter, neutralStarter)
 
     enemyStack(0) push 31500l -> new Liner(680f, -50f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f)
@@ -54,7 +56,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 
     enemyStack(0) push 6000l -> new Liner(1430f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = -90f, speedY = 0.2f)
     enemyStack(0) push 6000l -> new Liner(10f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = 90f, speedY = 0.2f)
-//       */
+       */
 
     /*
     109831
