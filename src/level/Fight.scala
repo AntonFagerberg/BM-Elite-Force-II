@@ -44,9 +44,12 @@ class Fight(gameContainer: GameContainer) extends Level {
 //    enemyStack(0) push 7900l -> new BioSmall(1000, -250, playerStarter, neutralStarter)
 //    enemyStack(0) push 7900l -> new BioSmall(1250, -150, playerStarter, neutralStarter)
 //
+//    enemyStack(0) push 7900l -> new BioSmall(720, -150, playerStarter, neutralStarter)
+
+//    enemyStack(0) push 0l -> new Liner(680f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f, destroyable = true)
+//    enemyStack(0) push 0l -> new Liner(760f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = 90f, speedY = 0.15f, destroyable = true)
 //    enemyStack(0) push 0l -> new BioSmall(720, -150, playerStarter, neutralStarter)
-    enemyStack(0) push 7900l -> new BioSmall(720, -150, playerStarter, neutralStarter)
-    enemyStack(0) push 0l -> new BioMedium(720, -150, playerStarter, neutralStarter)
+
 
     /*
     enemyStack(0) push 41201l -> new SaucerBoss(playerStarter, neutralStarter)
@@ -67,7 +70,7 @@ class Fight(gameContainer: GameContainer) extends Level {
        */
 
     /*
-    109831
+109831 <-- Nästa snabbvåg!
 113268
 116676
 120057
@@ -86,6 +89,24 @@ class Fight(gameContainer: GameContainer) extends Level {
      */
 
     //82813 lite tidigare
+    //81109
+    //82380
+
+    enemyStack(1) push 98280l -> new Liner(680f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f, destroyable = true)
+    enemyStack(1) push 98280l -> new Liner(760f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = 90f, speedY = 0.15f, destroyable = true)
+    enemyStack(1) push 98280l -> new BioSmall(720, -150, playerStarter, neutralStarter)
+
+    enemyStack(1) push 90280l -> new BioMedium(360, -250, playerStarter, neutralStarter)
+    enemyStack(1) push 90280l -> new BioMedium(720, -250, playerStarter, neutralStarter)
+    enemyStack(1) push 90280l -> new BioMedium(1080, -250, playerStarter, neutralStarter)
+    enemyStack(1) push 90280l -> new Liner(180f, -350f, Vector(Color.white), playerStarter, neutralStarter, angle = 180f, speedY = 0.15f, destroyable = true)
+    enemyStack(1) push 90280l -> new Liner(540f, -350f, Vector(Color.white), playerStarter, neutralStarter, angle = 180f, speedY = 0.15f, destroyable = true)
+    enemyStack(1) push 90280l -> new Liner(900f, -350f, Vector(Color.white), playerStarter, neutralStarter, angle = 180f, speedY = 0.15f, destroyable = true)
+    enemyStack(1) push 90280l -> new Liner(1260f, -350f, Vector(Color.white), playerStarter, neutralStarter, angle = 180f, speedY = 0.15f, destroyable = true)
+
+    enemyStack(1) push 82380l -> new Liner(720, -300f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f, destroyable = true)
+    enemyStack(1) push 82380l -> new Liner(720f, -350f, Vector(Color.white), playerStarter, neutralStarter, angle = 90f, speedY = 0.15f, destroyable = true)
+    enemyStack(1) push 82380l -> new BioMedium(720, -150, playerStarter, neutralStarter)
 
     enemyStack(1) push 75602l -> new Liner(1430f, -50f, Vector(Color.blue, Color.green, Color.red, Color.yellow), playerStarter, neutralStarter, angle = -90f, speedY = 0.25f, colorSwitch = 10)
     enemyStack(1) push 75602l -> new Liner(10f, -50f, Vector(Color.blue, Color.green, Color.red, Color.yellow), playerStarter, neutralStarter, angle = 90f, speedY = 0.25f, colorSwitch = 10)
@@ -147,7 +168,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 
     if (superDelta > 39000l && !checkPoints(0)) {
       checkPoints(0) = true
-      neutralStarter.link(new Text(2))
+//      neutralStarter.link(new Text(2))
     } else if (!checkPoints(1) && enemyStack(0).headOption.isEmpty && enemyStarter.next.isEmpty) {
       music(0).setVolume(music(0).getVolume - 0.0003f * delta)
       if (music(0).getVolume <= 0) {
@@ -156,11 +177,11 @@ class Fight(gameContainer: GameContainer) extends Level {
         music(0).stop()
         music(1).setVolume(0.5f)
         music(1).play()
-        neutralStarter.link(new Text(3))
+//        neutralStarter.link(new Text(3))
         levelPart += 1
       }
     } else if (checkPoints(1) && !checkPoints(2) && superDelta >= 48299L) {
-      neutralStarter.link(new Text(4))
+//      neutralStarter.link(new Text(4))
       checkPoints(2) = true
     }
 

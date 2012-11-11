@@ -15,7 +15,7 @@ class Liner(var x: Float, var y: Float, colors: Vector[Color], playerStarter: En
     else new Image("gfx/liner_gold_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2f)
   private val bulletStarter = new Starter
   private val hitBox = new Rectangle(x - sprite.getWidth / 2, y - sprite.getHeight / 2, sprite.getWidth, sprite.getHeight)
-  private var health = 50
+  private var health = 20
   sprite.rotate(angle)
 
   override def collision(implicit hitBoxes: List[Shape], color: Color): Boolean = {
