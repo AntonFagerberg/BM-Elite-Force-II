@@ -38,7 +38,15 @@ class Fight(gameContainer: GameContainer) extends Level {
     else
       playerStarter.link(new Player(gameContainer, enemyStarter, neutralStarter, -1))
 
-    enemyStack(0) push 0l -> new BioSmall(720, -100, playerStarter, neutralStarter)
+//    enemyStack(0) push 7900l -> new BioSmall(250, -150, playerStarter, neutralStarter)
+//    enemyStack(0) push 7900l -> new BioSmall(500, -250, playerStarter, neutralStarter)
+//    enemyStack(0) push 7900l -> new BioSmall(720, -150, playerStarter, neutralStarter)
+//    enemyStack(0) push 7900l -> new BioSmall(1000, -250, playerStarter, neutralStarter)
+//    enemyStack(0) push 7900l -> new BioSmall(1250, -150, playerStarter, neutralStarter)
+//
+//    enemyStack(0) push 0l -> new BioSmall(720, -150, playerStarter, neutralStarter)
+    enemyStack(0) push 7900l -> new BioSmall(720, -150, playerStarter, neutralStarter)
+    enemyStack(0) push 0l -> new BioMedium(720, -150, playerStarter, neutralStarter)
 
     /*
     enemyStack(0) push 41201l -> new SaucerBoss(playerStarter, neutralStarter)

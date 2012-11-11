@@ -15,8 +15,8 @@ class BioSmall(var x: Float, var y: Float, playerStarter: Entity, neutralStarter
     new Image("gfx/bio_small_1.png", false, Image.FILTER_NEAREST).getScaledCopy(4f),
     new Image("gfx/bio_small_2.png", false, Image.FILTER_NEAREST).getScaledCopy(4f)
   )
-  private var xOffset = sprites.head.getWidth / 2f - 10f
-  private var yOffset = 20f
+  private val xOffset = sprites.head.getWidth / 2f - 10f
+  private val yOffset = 20f
   private val colors = Vector(Color.green, Color.blue, Color.yellow, Color.red)
   private val hitBox = new Rectangle(x - xOffset, y - yOffset, sprites.head.getWidth - 20, 50f)
 
@@ -57,8 +57,8 @@ class BioSmall(var x: Float, var y: Float, playerStarter: Entity, neutralStarter
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
-//    graphics.draw(hitBox)
     sprites(spriteChange / 100).drawCentered(x, y)
+//    graphics.draw(hitBox)
     bulletStarter.linkedRender
   }
 }
