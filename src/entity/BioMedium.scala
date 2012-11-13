@@ -6,7 +6,7 @@ import util.Random
 
 class BioMedium(var x: Float, var y: Float, playerStarter: Entity, neutralStarter: Entity) extends Entity {
   private val bulletStarter = new Starter
-  private var health = 100
+  private var health = 75
   private var bulletDelay = 1000
   private val startX = x
   private var superDelta = 0l
