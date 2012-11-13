@@ -2,9 +2,8 @@ package entity
 
 import org.newdawn.slick.{Image, Graphics, GameContainer}
 
-class Text(id: Int) extends Entity {
+class Text(id: Int, var holdTime: Int = 2500) extends Entity {
   private var y = -300f
-  private var holdTime = 1500
   private val image = id match {
     case 1 => new Image("gfx/part_one.png")
     case 2 => new Image("gfx/part_two.png")
