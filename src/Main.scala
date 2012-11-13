@@ -22,7 +22,8 @@ object Main extends BasicGame("BM Elite Force II") {
     val gameContainer = new AppGameContainer(new ScalableGame(this, 1440, 900, true))
     gameContainer.setDisplayMode(1920, 1200, true)
     gameContainer.setUpdateOnlyWhenVisible(false)
-    gameContainer.setMouseGrabbed(false)
+    gameContainer.setMouseGrabbed(true)
+    gameContainer.setShowFPS(false)
     gameContainer.start()
   }
 }

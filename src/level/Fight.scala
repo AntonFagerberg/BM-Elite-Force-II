@@ -30,7 +30,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 
   private def initialize() {
     backgroundStarter.link(new Background)
-//    neutralStarter.link(new Text(1))
+    neutralStarter.link(new Text(1))
 
     if (gameContainer.getInput.getControllerCount > 0)
       for (i <- 0 until gameContainer.getInput.getControllerCount)
@@ -51,7 +51,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 //    enemyStack(0) push 0l -> new BioSmall(720, -150, playerStarter, neutralStarter)
 
 
-    /*
+//    /*
     enemyStack(0) push 41201l -> new SaucerBoss(playerStarter, neutralStarter)
 
     enemyStack(0) push 31500l -> new Liner(680f, -50f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f)
@@ -67,7 +67,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 
     enemyStack(0) push 6000l -> new Liner(1430f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = -90f, speedY = 0.2f)
     enemyStack(0) push 6000l -> new Liner(10f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = 90f, speedY = 0.2f)
-       */
+//       */
 
     /*
 109831 <-- Nästa snabbvåg!
@@ -168,7 +168,7 @@ class Fight(gameContainer: GameContainer) extends Level {
 
     if (superDelta > 39000l && !checkPoints(0)) {
       checkPoints(0) = true
-//      neutralStarter.link(new Text(2))
+      neutralStarter.link(new Text(2))
     } else if (!checkPoints(1) && enemyStack(0).headOption.isEmpty && enemyStarter.next.isEmpty) {
       music(0).setVolume(music(0).getVolume - 0.0003f * delta)
       if (music(0).getVolume <= 0) {
@@ -177,11 +177,11 @@ class Fight(gameContainer: GameContainer) extends Level {
         music(0).stop()
         music(1).setVolume(0.5f)
         music(1).play()
-//        neutralStarter.link(new Text(3))
+        neutralStarter.link(new Text(3))
         levelPart += 1
       }
     } else if (checkPoints(1) && !checkPoints(2) && superDelta >= 48299L) {
-//      neutralStarter.link(new Text(4))
+      neutralStarter.link(new Text(4))
       checkPoints(2) = true
     }
 
