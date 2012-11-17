@@ -7,7 +7,7 @@ import entity._
 class Intro(gameContainer: GameContainer, random: Random, backgrounds: Linker, players: Linker, enemies: Linker) extends Level {
   private val music = new Music("msc/intro.ogg")
 
-  override def update(delta: Int) {
+    override def update(delta: Int) {
     levelDelta += delta
     while (spawn.headOption.isDefined && spawn.head._1 <= levelDelta)
       enemies.link(spawn.pop()._2)
@@ -45,6 +45,14 @@ private object Intro extends Entity {
     new Image("gfx/i_2.png", false, Image.FILTER_NEAREST)
   )
 
+  private val creditImages = Vector(
+    new Image("gfx/credits_1.png"),
+    new Image("gfx/credits_2.png"),
+    new Image("gfx/credits_3.png")
+  )
+
+//  creditImages.foreach(_.setAlpha(0f))
+
   var index = 0
   var indexCount = -1
 
@@ -52,7 +60,6 @@ private object Intro extends Entity {
   var iY = 400f
   var iX = 440f
   var bmY = -100f
-
 
   def update(delta: Int, linker: Linker) {
     superDelta += delta
@@ -96,6 +103,10 @@ private object Intro extends Entity {
   }
 
   def render(graphics: Graphics) {
+    creditImages(0).draw(0, 0)
+//    creditImages(1).draw(0, 0)
+//    creditImages(2).draw(0, 0)
+
     bm.draw(415f, bmY)
 
     if (superDelta >= 22005)

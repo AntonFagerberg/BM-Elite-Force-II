@@ -11,9 +11,14 @@ class Intro extends Level {
   private val kudasai = new Image("gfx/kudasai.png", false, Image.FILTER_NEAREST)
   private val bm = new Image("gfx/bm_elite_force.png", false, Image.FILTER_NEAREST)
   private val background = new Background
-  private val i = IndexedSeq(
+  private val i = Vector(
     new Image("gfx/i_1.png", false, Image.FILTER_NEAREST),
     new Image("gfx/i_2.png", false, Image.FILTER_NEAREST)
+  )
+  private val creditImages = Vector(
+    new Image("gfx/credits_1.png"),
+    new Image("gfx/credits_2.png"),
+    new Image("gfx/credits_3.png")
   )
   private var index = 0
   private var indexCount = -1
@@ -28,7 +33,7 @@ class Intro extends Level {
   def update(implicit gameContainer: GameContainer, delta: Int) {
     levelDelta += delta
 
-  if (gameContainer.getInput.isKeyPressed(Input.KEY_SPACE))
+    if (gameContainer.getInput.isKeyPressed(Input.KEY_SPACE))
       println(levelDelta)
 
     if (levelDelta > 34340)
@@ -65,7 +70,7 @@ class Intro extends Level {
           iX = 935f
 
         if (iY > 209f)
-          iY -= 1.5f
+          iY -= 2.5f
         else if (iY < 209f)
           iY = 209f
       }
@@ -74,6 +79,15 @@ class Intro extends Level {
   }
 
   def render(implicit gameContainer: GameContainer, graphics: Graphics) {
+    if (levelDelta < 11228)
+      creditImages(0).draw(0, 0)
+
+    if (levelDelta > 13926 && levelDelta < 16661)
+      creditImages(1).draw(0, 0)
+
+    if (levelDelta > 16661 && levelDelta < 19365)
+      creditImages(2).draw(0, 0)
+
     bm.draw(415f, bmY)
 
     if (levelDelta >= 21900)

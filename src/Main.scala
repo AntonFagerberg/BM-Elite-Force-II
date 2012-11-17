@@ -6,8 +6,8 @@ object Main extends BasicGame("BM Elite Force II") {
   private var currentLevel: Level = null
 
   def init(gameContainer: GameContainer) {
-    currentLevel = new Fight(gameContainer)
-//    currentLevel = new Intro
+//    currentLevel = new Fight(gameContainer)
+    currentLevel = new Intro
   }
 
   def update(gameContainer: GameContainer, delta: Int) {
