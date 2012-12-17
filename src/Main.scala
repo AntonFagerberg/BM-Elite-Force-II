@@ -10,6 +10,7 @@ object Main extends BasicGame("BM Elite Force II") {
     currentLevel = new Intro
   }
 
+
   def update(gameContainer: GameContainer, delta: Int) {
     currentLevel.update(gameContainer, delta)
   }
