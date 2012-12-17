@@ -35,28 +35,28 @@ class BioMedium(var x: Float, var y: Float, playerStarter: Entity, neutralStarte
   }
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
-    spriteChange += delta
-    while (spriteChange >= 200) spriteChange -= 200
+    if (y > 1100f) unlink()
+    else {
+      spriteChange += delta
+      while (spriteChange >= 200) spriteChange -= 200
 
-    superDelta += delta
-    bulletDelay -= delta
+      superDelta += delta
+      bulletDelay -= delta
 
-    if (bulletDelay <= 0) {
-      colorChange = random.nextInt(4)
-      bulletStarter.link(new Bullet(x, y + 75f, colors(colorChange), playerStarter, speedY = 1.5f))
-      bulletStarter.link(new Bullet(x + 12f, y + 65f, colors(colorChange), playerStarter, speedY = 1.5f))
-      bulletStarter.link(new Bullet(x - 12f, y + 65f, colors(colorChange), playerStarter, speedY = 1.5f))
-      while (bulletDelay <= 0) bulletDelay += 1000
+      if (bulletDelay <= 0) {
+        colorChange = random.nextInt(4)
+        bulletStarter.link(new Bullet(x, y + 75f, colors(colorChange), playerStarter, speedY = 1.5f))
+        bulletStarter.link(new Bullet(x + 12f, y + 65f, colors(colorChange), playerStarter, speedY = 1.5f))
+        bulletStarter.link(new Bullet(x - 12f, y + 65f, colors(colorChange), playerStarter, speedY = 1.5f))
+        while (bulletDelay <= 0) bulletDelay += 1000
+      }
+
+      y += delta * 0.15f
+      x = startX + 50f * math.sin(superDelta * 0.002d).toFloat
+      hitBox.setLocation(x - xOffset, y - yOffset)
+
+      bulletStarter.linkedUpdate
     }
-
-    y += delta * 0.15f
-    x = startX + 50f * math.sin(superDelta * 0.002d).toFloat
-    hitBox.setLocation(x - xOffset, y - yOffset)
-
-    if (y > 1100f)
-      unlink()
-
-    bulletStarter.linkedUpdate
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {

@@ -33,29 +33,29 @@ class BioSmall(var x: Float, var y: Float, playerStarter: Entity, neutralStarter
   }
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
-    superDelta += delta
-    bulletDelay -= delta
-    spriteChange += delta
-    while (spriteChange >= 200) spriteChange -= 200
+    if (y > 1100f) unlink()
+    else {
+      superDelta += delta
+      bulletDelay -= delta
+      spriteChange += delta
+      while (spriteChange >= 200) spriteChange -= 200
 
-    if (bulletDelay <= 0) {
-      colorChange = (colorChange + 1) % 4
-      bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = -0.27925268f, speedY = 0.8f, angle = 20f))
-      bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = -0.13962634f, speedY = 0.8f, angle = 10f))
-      bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedY = 0.8f))
-      bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = 0.13962634f, speedY = 0.8f, angle = -10f))
-      bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = 0.27925268f, speedY = 0.8f, angle = -20f))
-      while (bulletDelay <= 0) bulletDelay += 1000
+      if (bulletDelay <= 0) {
+        colorChange = (colorChange + 1) % 4
+        bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = -0.27925268f, speedY = 0.8f, angle = 20f))
+        bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = -0.13962634f, speedY = 0.8f, angle = 10f))
+        bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedY = 0.8f))
+        bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = 0.13962634f, speedY = 0.8f, angle = -10f))
+        bulletStarter.link(new Bullet(x, y + 25f, colors(colorChange), playerStarter, speedX = 0.27925268f, speedY = 0.8f, angle = -20f))
+        while (bulletDelay <= 0) bulletDelay += 1000
+      }
+
+      y += delta * 0.15f
+      x = startX + 150f * math.sin(superDelta * 0.002d).toFloat
+      hitBox.setLocation(x - xOffset, y - yOffset)
+
+      bulletStarter.linkedUpdate
     }
-
-    y += delta * 0.15f
-    x = startX + 150f * math.sin(superDelta * 0.002d).toFloat
-    hitBox.setLocation(x - xOffset, y - yOffset)
-
-    if (y > 1100f)
-      unlink()
-
-    bulletStarter.linkedUpdate
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {

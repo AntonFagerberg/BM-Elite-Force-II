@@ -6,7 +6,7 @@ import util.Random
 
 class BioLarge(var x: Float, var y: Float, playerStarter: Entity, neutralStarter: Entity, var speedY: Float = 0.02f) extends Entity {
   private val bulletStarter = new Starter
-  private var health = 300
+  private var health = 500
   private var bulletDelay = 1000
   private val startX = x
   private var superDelta = 0l
@@ -51,23 +51,23 @@ class BioLarge(var x: Float, var y: Float, playerStarter: Entity, neutralStarter
   }
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
-    spriteChange += delta
-    while (spriteChange >= 200) spriteChange -= 200
+    if (y > 1100f) unlink()
+    else {
+      spriteChange += delta
+      while (spriteChange >= 200) spriteChange -= 200
 
-    superDelta += delta
-    bulletDelay -= delta
+      superDelta += delta
+      bulletDelay -= delta
 
-    if (hitWait > 0)
-      hitWait -= delta
+      if (hitWait > 0)
+        hitWait -= delta
 
-    y += delta * speedY
-    x = startX + 50f * math.sin(superDelta * 0.002d).toFloat
-    hitBox.setLocation(x - xOffset, y - yOffset)
+      y += delta * speedY
+      x = startX + 50f * math.sin(superDelta * 0.002d).toFloat
+      hitBox.setLocation(x - xOffset, y - yOffset)
 
-    if (y > 1100f)
-      unlink()
-
-    bulletStarter.linkedUpdate
+      bulletStarter.linkedUpdate
+    }
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {

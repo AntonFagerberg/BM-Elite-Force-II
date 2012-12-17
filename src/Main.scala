@@ -1,17 +1,28 @@
-import entity.{Player, Background, Starter, TestBox}
-import level.{Level, Fight, Intro}
+import entity.{Player, Background, Starter}
+import level.{Continue, Level, Fight, Intro}
 import org.newdawn.slick._
 
 object Main extends BasicGame("BM Elite Force II") {
-  private var currentLevel: Level = null
+  private var currentLevel: Level = null // Don't blame me, blame Slick / Java.
+  private var play = false
+  private var deathCount = 0
 
   def init(gameContainer: GameContainer) {
-    currentLevel = new Fight(gameContainer)
-//    currentLevel = new Intro
+    currentLevel = new Intro
   }
 
-
   def update(gameContainer: GameContainer, delta: Int) {
+    if (currentLevel.done) {
+      currentLevel =
+        if (!play) new Fight(gameContainer)
+        else {
+          deathCount += 1
+          new Continue(deathCount % 50 == 0)
+        }
+
+      play = !play
+    }
+
     currentLevel.update(gameContainer, delta)
   }
 

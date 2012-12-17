@@ -6,7 +6,6 @@ import org.newdawn.slick.geom.{Shape, Rectangle}
 class BigBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
   private var x = 720f
   private var y = -1000f
-//  private var y = 150f
   private val bulletStarter = new Starter
   private var superDelta = 0l
   private var pattern = 0

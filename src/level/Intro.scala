@@ -10,6 +10,7 @@ class Intro extends Level {
   private val mitsu = new Image("gfx/mitsu.png", false, Image.FILTER_NEAREST)
   private val kudasai = new Image("gfx/kudasai.png", false, Image.FILTER_NEAREST)
   private val bm = new Image("gfx/bm_elite_force.png", false, Image.FILTER_NEAREST)
+  private val continue = new Image("gfx/continue.png")
   private val background = new Background
   private val i = Vector(
     new Image("gfx/i_1.png", false, Image.FILTER_NEAREST),
@@ -26,11 +27,16 @@ class Intro extends Level {
   private var iY = 400f
   private var iX = 440f
   private var bmY = -100f
-
-  music.play()
+  private var introDone = false
+  private var fadeDelta = 0l
   private var levelDelta = 0L
 
-  def update(implicit gameContainer: GameContainer, delta: Int) {
+  continue.setAlpha(0f)
+  music.play()
+
+  override def done = introDone
+
+  override def update(implicit gameContainer: GameContainer, delta: Int) {
     levelDelta += delta
 
     if (gameContainer.getInput.isKeyPressed(Input.KEY_SPACE))
@@ -55,13 +61,13 @@ class Intro extends Level {
 
       if (levelDelta >= 45041 && levelDelta < 60000) {
         iX = 710f
-        if (iY < 910)
-          iY += 0.1f
+        if (iY < 910f) iY += 0.1f
+        else iY = 910f
       }
 
       if (levelDelta >= 60023) {
-        if (bmY <= 200f)
-          bmY += 0.1f
+        if (bmY <= 200f) bmY += 0.1f
+        else bmY = 200f
       }
 
 
@@ -69,16 +75,24 @@ class Intro extends Level {
         if (iX < 935f)
           iX = 935f
 
-        if (iY > 209f)
-          iY -= 2.5f
-        else if (iY < 209f)
-          iY = 209f
-      }
+        if (iY > 209f) iY -= 2.5f
+        else if (iY < 209f) iY = 209f
+        else {
+          if (levelDelta < 600000)
+            levelDelta = 600000
 
+          fadeDelta = levelDelta % 3000
+          if (fadeDelta < 500) continue.setAlpha(fadeDelta / 500f)
+          else if (fadeDelta > 2500) continue.setAlpha(1 - ((fadeDelta - 2500f) / 500f))
+        }
+      }
     }
+
+    for (i <- 0 until gameContainer.getInput.getControllerCount if gameContainer.getInput.isButtonPressed(4, i))
+      introDone = true
   }
 
-  def render(implicit gameContainer: GameContainer, graphics: Graphics) {
+  override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
     if (levelDelta < 11228)
       creditImages(0).draw(0, 0)
 
@@ -107,6 +121,8 @@ class Intro extends Level {
 
     if (levelDelta > 34340)
       background.render
+
+    continue.drawCentered(670f, 320f)
   }
 }
 

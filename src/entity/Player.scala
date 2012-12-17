@@ -14,6 +14,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
   private var shootDelay = 0.0f
   private var axisY = 0f
   private var axisX = 0f
+  private var lives = 3
   private val bulletSound = new Sound("sfx/bullet.wav")
 
   override def collision(implicit hitBoxes: List[Shape], color: Color): Boolean = {
@@ -208,6 +209,9 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
         shipGreen.foreach(_.setAlpha(0.5f))
         shipBlue.foreach(_.setAlpha(0.5f))
         shipYellow.foreach(_.setAlpha(0.5f))
+        lives -= 1
+        if (lives <= 0)
+          unlink()
         true
       } else {
         false
@@ -217,8 +221,8 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
     def explode() {
       neutralStarter.link(new Explosion(x, y, 3f))
       deadDelta = 2500
-      x = 450
-      y = 1440
+      x = 720f
+      y = 1440f
     }
 
     def update(delta: Int) {
@@ -231,7 +235,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
         deadDelta = Int.MinValue
       }
 
-      if (enemyStarter.linkedCollision(hitBox.hitBoxes, color) > 0) {
+      if (deadDelta <= 0 && enemyStarter.linkedCollision(hitBox.hitBoxes, color) > 0) {
         explode()
       }
 
