@@ -4,9 +4,8 @@ import org.newdawn.slick.{Color, Graphics, GameContainer, Image}
 import org.newdawn.slick.geom.{Shape, Rectangle}
 import util.Random
 
-class BioMedium(var x: Float, var y: Float, playerStarter: Entity, neutralStarter: Entity) extends Entity {
+class BioMedium(var x: Float, var y: Float, playerStarter: Entity, neutralStarter: Entity, var health: Int = 75) extends Entity {
   private val bulletStarter = new Starter
-  private var health = 75
   private var bulletDelay = 1000
   private val startX = x
   private var superDelta = 0l
@@ -53,12 +52,16 @@ class BioMedium(var x: Float, var y: Float, playerStarter: Entity, neutralStarte
     y += delta * 0.15f
     x = startX + 50f * math.sin(superDelta * 0.002d).toFloat
     hitBox.setLocation(x - xOffset, y - yOffset)
+
+    if (y > 1100f)
+      unlink()
+
     bulletStarter.linkedUpdate
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
    sprites(spriteChange / 100).drawCentered(x, y)
-   graphics.draw(hitBox)
+//   graphics.draw(hitBox)
    bulletStarter.linkedRender
   }
  }

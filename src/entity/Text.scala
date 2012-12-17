@@ -9,6 +9,7 @@ class Text(id: Int, var holdTime: Int = 2500) extends Entity {
     case 2 => new Image("gfx/part_two.png")
     case 3 => new Image("gfx/part_three.png")
     case 4 => new Image("gfx/part_four.png")
+    case 5 => new Image("gfx/part_final.png")
   }
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {

@@ -10,9 +10,12 @@ class Fight(gameContainer: GameContainer) extends Level {
   private val backgroundStarter = new Starter
   private val neutralStarter = new Starter
   private val music = Vector(
-    new Music("msc/498935_X-Sentinel---Lift-O.ogg"),
-    new Music("msc/469781_XS-amp-GS---Game-Ov.ogg")
+    new Music("msc/498935_X-Sentinel---Lift-O.ogg", true),
+    new Music("msc/469781_XS-amp-GS---Game-Ov.ogg", true),
+    new Music("msc/476561_LED-MSB---wip.ogg", true)
   )
+
+
   private val enemyStack = Vector(
     new collection.mutable.Stack[(Long, Entity)],
     new collection.mutable.Stack[(Long, Entity)]
@@ -21,6 +24,7 @@ class Fight(gameContainer: GameContainer) extends Level {
   private var superDelta = 0l
 
   private val checkPoints = mutable.ArrayBuffer(
+    false,
     false,
     false,
     false
@@ -38,20 +42,6 @@ class Fight(gameContainer: GameContainer) extends Level {
     else
       playerStarter.link(new Player(gameContainer, enemyStarter, neutralStarter, -1))
 
-//    enemyStack(0) push 7900l -> new BioSmall(250, -150, playerStarter, neutralStarter)
-//    enemyStack(0) push 7900l -> new BioSmall(500, -250, playerStarter, neutralStarter)
-//    enemyStack(0) push 7900l -> new BioSmall(720, -150, playerStarter, neutralStarter)
-//    enemyStack(0) push 7900l -> new BioSmall(1000, -250, playerStarter, neutralStarter)
-//    enemyStack(0) push 7900l -> new BioSmall(1250, -150, playerStarter, neutralStarter)
-//
-//    enemyStack(0) push 7900l -> new BioSmall(720, -150, playerStarter, neutralStarter)
-
-//    enemyStack(0) push 0l -> new Liner(680f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f, destroyable = true)
-//    enemyStack(0) push 0l -> new Liner(760f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = 90f, speedY = 0.15f, destroyable = true)
-//    enemyStack(0) push 0l -> new BioSmall(720, -150, playerStarter, neutralStarter)
-
-
-//    /*
     enemyStack(0) push 41201l -> new SaucerBoss(playerStarter, neutralStarter)
 
     enemyStack(0) push 31500l -> new Liner(680f, -50f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f)
@@ -67,30 +57,35 @@ class Fight(gameContainer: GameContainer) extends Level {
 
     enemyStack(0) push 6000l -> new Liner(1430f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = -90f, speedY = 0.2f)
     enemyStack(0) push 6000l -> new Liner(10f, -50f, Vector(Color.green), playerStarter, neutralStarter, angle = 90f, speedY = 0.2f)
-//       */
 
-    /*
-109831 <-- Nästa snabbvåg!
-113268
-116676
-120057
-123468
-126924
-130404
-133764
-168131
-171587
-174908
-178356
-181763
-185257
-188660
-192068
-     */
+    enemyStack(1) push 191531l -> new BioMedium(320, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 191131l -> new BioMedium(1100, -150, playerStarter, neutralStarter, health = 15)
 
-    //82813 lite tidigare
-    //81109
-    //82380
+    enemyStack(1) push 189831l -> new BioSmall(320, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 189131l -> new BioSmall(1100, -150, playerStarter, neutralStarter, health = 15)
+
+    enemyStack(1) push 187131l -> new BioMedium(320, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 187631l -> new BioMedium(1100, -150, playerStarter, neutralStarter, health = 15)
+
+    enemyStack(1) push 185431l -> new BioSmall(220, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 185131l -> new BioSmall(1200, -150, playerStarter, neutralStarter, health = 15)
+
+    enemyStack(1) push 182131l -> new BioLarge(720f, -150f, playerStarter, neutralStarter, speedY = 0.07f)
+
+    enemyStack(1) push 180531l -> new BioMedium(220, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 180331l -> new BioMedium(1100, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 178131l -> new BioSmall(720, -150, playerStarter, neutralStarter, health = 15)
+
+    enemyStack(1) push 176031l -> new BioMedium(1320, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 175231l -> new BioMedium(320, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 173131l -> new BioMedium(720, -150, playerStarter, neutralStarter, health = 15)
+
+    enemyStack(1) push 169131l -> new BioSmall(220, -150, playerStarter, neutralStarter, health = 15)
+    enemyStack(1) push 167831l -> new BioSmall(920, -150, playerStarter, neutralStarter, health = 15)
+
+    enemyStack(1) push 109630l -> new Liner(720f, -350f, Vector(Color.white), playerStarter, neutralStarter, angle = 90f, speedY = 0.02f, destroyable = true)
+    enemyStack(1) push 109630l -> new Liner(720f, -300f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.02f, destroyable = true)
+    enemyStack(1) push 109530l -> new BioLarge(720f, -150f, playerStarter, neutralStarter)
 
     enemyStack(1) push 98280l -> new Liner(680f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = -90f, speedY = 0.15f, destroyable = true)
     enemyStack(1) push 98280l -> new Liner(760f, -250f, Vector(Color.white), playerStarter, neutralStarter, angle = 90f, speedY = 0.15f, destroyable = true)
@@ -148,10 +143,6 @@ class Fight(gameContainer: GameContainer) extends Level {
     enemyStack(1) push 13792l -> new Liner(1430f, -50f, Vector(Color.blue), playerStarter, neutralStarter, angle = -90f, speedY = 0.25f)
     enemyStack(1) push 13792l -> new Liner(10f, -50f, Vector(Color.red), playerStarter, neutralStarter, angle = 90f, speedY = 0.25f)
 
-//    enemyStack(1) push 800l -> new Liner(1430f, -50f, Vector(Color.blue, Color.green, Color.red, Color.yellow), playerStarter, neutralStarter, angle = -90f, speedY = 0.25f, colorSwitch = 10)
-//    enemyStack(1) push 800l -> new Liner(10f, -50f, Vector(Color.blue, Color.green, Color.red, Color.yellow), playerStarter, neutralStarter, angle = 90f, speedY = 0.25f, colorSwitch = 10)
-
-
     levelPart = 0
     superDelta = 0l
     music(0).setVolume(1f)
@@ -175,7 +166,7 @@ class Fight(gameContainer: GameContainer) extends Level {
         superDelta = 0
         checkPoints(1) = true
         music(0).stop()
-        music(1).setVolume(0.5f)
+        music(1).setVolume(1f)
         music(1).play()
         neutralStarter.link(new Text(3))
         levelPart += 1
@@ -183,6 +174,12 @@ class Fight(gameContainer: GameContainer) extends Level {
     } else if (checkPoints(1) && !checkPoints(2) && superDelta >= 48299L) {
       neutralStarter.link(new Text(4))
       checkPoints(2) = true
+    } else if (superDelta >= 200000l && enemyStarter.next.isEmpty && !checkPoints(3)) {
+      checkPoints(3) = true
+      music(1).stop()
+      music(2).play()
+      enemyStarter.link(new BigBoss(playerStarter, neutralStarter))
+      neutralStarter.link(new Text(5))
     }
 
     playerStarter.linkedUpdate
@@ -192,9 +189,9 @@ class Fight(gameContainer: GameContainer) extends Level {
   }
 
   def render(implicit gameContainer: GameContainer, graphics: Graphics) {
-    playerStarter.linkedRender
-    enemyStarter.linkedRender
     backgroundStarter.linkedRender
     neutralStarter.linkedRender
+    enemyStarter.linkedRender
+    playerStarter.linkedRender
   }
 }

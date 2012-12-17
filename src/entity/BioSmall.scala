@@ -3,9 +3,8 @@ package entity
 import org.newdawn.slick.{Color, Graphics, GameContainer, Image}
 import org.newdawn.slick.geom.{Shape, Rectangle}
 
-class BioSmall(var x: Float, var y: Float, playerStarter: Entity, neutralStarter: Entity) extends Entity {
+class BioSmall(var x: Float, var y: Float, playerStarter: Entity, neutralStarter: Entity, var health: Int = 100) extends Entity {
   private val bulletStarter = new Starter
-  private var health = 100
   private var bulletDelay = 1000
   private val startX = x
   private var superDelta = 0l
@@ -52,6 +51,9 @@ class BioSmall(var x: Float, var y: Float, playerStarter: Entity, neutralStarter
     y += delta * 0.15f
     x = startX + 150f * math.sin(superDelta * 0.002d).toFloat
     hitBox.setLocation(x - xOffset, y - yOffset)
+
+    if (y > 1100f)
+      unlink()
 
     bulletStarter.linkedUpdate
   }

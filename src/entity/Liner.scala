@@ -3,7 +3,7 @@ package entity
 import org.newdawn.slick.{Color, Graphics, GameContainer, Image}
 import org.newdawn.slick.geom.{Shape, Transform, Rectangle}
 
-class Liner(var x: Float, var y: Float, colors: Vector[Color], playerStarter: Entity, neutralStarter: Entity, colorSwitch: Int = 0, angle: Float = 0f, speedX: Float = 0f, speedY: Float = 0f, speedRotation: Float = 0f, bulletSpeed: Float = 1f, destroyable: Boolean = false) extends Entity {
+class Liner(var x: Float, var y: Float, colors: Vector[Color], playerStarter: Entity, neutralStarter: Entity, colorSwitch: Int = 0, angle: Float = 0f, speedX: Float = 0f, speedY: Float = 0f, speedRotation: Float = 0f, bulletSpeed: Float = 1f, shootSpeed: Int = 70, destroyable: Boolean = false) extends Entity {
   private var bulletDelay = 0
   private var angleRotation = 0d
   private var angleCos = 0f
@@ -45,7 +45,7 @@ class Liner(var x: Float, var y: Float, colors: Vector[Color], playerStarter: En
       bulletDelay -= delta
 
       if (bulletDelay <= 0) {
-        bulletDelay = 70 - (12 * bulletSpeed.toInt)
+        bulletDelay = shootSpeed - (12 * bulletSpeed.toInt)
         angleRotation = sprite.getRotation * math.Pi / 180d
         angleCos = math.cos(angleRotation).toFloat
         angleSin = math.sin(angleRotation).toFloat

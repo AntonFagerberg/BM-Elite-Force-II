@@ -30,7 +30,7 @@ class Bullet(var x: Float, var y: Float, color: Color, collisionStarter: Entity,
 
       if (collisionStarter.linkedCollision(List(hitBox.transform(Transform.createRotateTransform(math.toRadians(angle).toFloat, hitBox.getX + xOffset, hitBox.getY + yOffset))), color) > 0) {
         unlink()
-        sound.play(1f, 0.5f)
+//        sound.play(1f, 0.5f)
       } else hitBox.setLocation(x - xOffset, y - yOffset)
     }
 
