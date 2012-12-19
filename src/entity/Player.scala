@@ -7,20 +7,17 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
   private var x = 720f
   private var y = 1400f
   private val bulletStarter = new Starter
-  private val ship = new Ship
   private val speed = 0.6f
   private var velocityX = 0.0f
   private var velocityY = 0.0f
   private var shootDelay = 0.0f
   private var axisY = 0f
   private var axisX = 0f
-  private var lives = 100
+  private var lives = 3
   private var showHealth = false
   private val bulletSound = new Sound("sfx/bullet.wav")
 
-  override def collision(implicit hitBoxes: Seq[Shape], color: Color): Boolean = {
-    ship.collision
-  }
+  override def collision(implicit hitBoxes: Seq[Shape], color: Color): Boolean = Ship.collision
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
     if (controllerIndex < gameContainer.getInput.getControllerCount && controllerIndex >= 0) {
@@ -30,20 +27,20 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       if (axisY > 0.25 || axisY < -0.25) velocityY = axisY  * speed
       if (axisX > 0.25 || axisX < -0.25) velocityX = axisX * speed
 
-      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(controllerIndex, 5) > 0) ship.fire()
-      if (gameContainer.getInput.isButtonPressed(11, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) > 0.5) ship.green()
-      else if (gameContainer.getInput.isButtonPressed(12, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) > 0.5) ship.red()
-      else if (gameContainer.getInput.isButtonPressed(13, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) < -0.5) ship.blue()
-      else if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) ship.yellow()
+      if (shootDelay < 0f && gameContainer.getInput.getAxisValue(controllerIndex, 5) > 0) Ship.fire()
+      if (gameContainer.getInput.isButtonPressed(11, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) > 0.5) Ship.green()
+      else if (gameContainer.getInput.isButtonPressed(12, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) > 0.5) Ship.red()
+      else if (gameContainer.getInput.isButtonPressed(13, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 2) < -0.5) Ship.blue()
+      else if (gameContainer.getInput.isButtonPressed(14, controllerIndex) || gameContainer.getInput.getAxisValue(controllerIndex, 3) < -0.5) Ship.yellow()
 
       showHealth = gameContainer.getInput.isButtonPressed(6, controllerIndex)
     } else if (controllerIndex == -1) {
 
-      if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) ship.fire()
-      if (gameContainer.getInput.isKeyDown(Input.KEY_S)) ship.green()
-      else if (gameContainer.getInput.isKeyDown(Input.KEY_D)) ship.red()
-      else if (gameContainer.getInput.isKeyDown(Input.KEY_A)) ship.blue()
-      else if (gameContainer.getInput.isKeyDown(Input.KEY_W)) ship.yellow()
+      if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) Ship.fire()
+      if (gameContainer.getInput.isKeyDown(Input.KEY_S)) Ship.green()
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_D)) Ship.red()
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_A)) Ship.blue()
+      else if (gameContainer.getInput.isKeyDown(Input.KEY_W)) Ship.yellow()
 
       if (gameContainer.getInput.isKeyDown(Input.KEY_UP)) velocityY = -speed
       else if (gameContainer.getInput.isKeyDown(Input.KEY_DOWN)) velocityY = speed
@@ -54,39 +51,39 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
     }
 
     for (i <- 0 until delta) {
-      if (x + ship.marginX <= 1440 && x - ship.marginX >= 0) {
+      if (x + Ship.marginX <= 1440 && x - Ship.marginX >= 0) {
         x = x + velocityX
         velocityX = if (velocityX < 0.001 && velocityX > -0.001) 0 else velocityX * 0.99f
 
-        if (velocityX > 0.1) ship.right()
-        else if (velocityX < -0.1) ship.left()
-        else ship.forward()
+        if (velocityX > 0.1) Ship.right()
+        else if (velocityX < -0.1) Ship.left()
+        else Ship.forward()
       } else {
         velocityX = 0
-        x = if (x <= ship.marginX) ship.marginX else 1440 - ship.marginX
+        x = if (x <= Ship.marginX) Ship.marginX else 1440 - Ship.marginX
       }
 
-      if (y + ship.marginY <= 900 && y - ship.marginY >= 0) {
+      if (y + Ship.marginY <= 900 && y - Ship.marginY >= 0) {
         y = y + velocityY
         velocityY = if (velocityY < 0.001 && velocityY > -0.001) 0 else velocityY * 0.99f
       } else {
         velocityY = 0
-        y = if (y <= ship.marginY) ship.marginY else 900 - ship.marginY
+        y = if (y <= Ship.marginY) Ship.marginY else 900 - Ship.marginY
       }
 
       shootDelay = if (shootDelay >= 0) shootDelay - 0.02f else 0f
     }
 
-    ship.update(delta)
+    Ship.update(delta)
     bulletStarter.linkedUpdate
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
-    ship.render(graphics)
+    Ship.render(graphics)
     bulletStarter.linkedRender
   }
 
-  private class Ship {
+  private object Ship {
     private var deadDelta = Int.MinValue
     private var spriteChange = 0
     private var spriteIndex = 0
@@ -94,7 +91,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
     private var color = Color.green
     private val heart = new Image("gfx/heart.png", false, Image.FILTER_NEAREST).getScaledCopy(2f)
 
-    private val shipGreen = Vector(
+    private val ShipGreen = Vector(
       new Image("gfx/green_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/green_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/green_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -103,7 +100,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       new Image("gfx/green_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
     )
 
-    private val shipYellow = Vector(
+    private val ShipYellow = Vector(
       new Image("gfx/yellow_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/yellow_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/yellow_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -112,7 +109,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       new Image("gfx/yellow_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
     )
 
-    private val shipBlue = Vector(
+    private val ShipBlue = Vector(
       new Image("gfx/blue_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/blue_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/blue_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -121,7 +118,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       new Image("gfx/blue_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
     )
 
-    private val shipRed = Vector(
+    private val ShipRed = Vector(
       new Image("gfx/red_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/red_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_F_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
       new Image("gfx/red_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_L_1.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f),
@@ -130,10 +127,10 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       new Image("gfx/red_" + (if (controllerIndex == -1) 1 else controllerIndex + 1) + "_R_2.png", false, Image.FILTER_NEAREST).getScaledCopy(2.5f)
     )
 
-    private var shipSprites = shipGreen
+    private var ShipSprites = ShipGreen
 
-    val marginX: Float = shipSprites(0).getWidth / 2f
-    val marginY: Float = shipSprites(0).getHeight / 2f
+    val marginX: Float = ShipSprites(0).getWidth / 2f
+    val marginY: Float = ShipSprites(0).getHeight / 2f
 
     private val hitBoxes = controllerIndex match {
       case -1 => Vector(new Rectangle(x - 15, y - marginY, 30, 80), new Rectangle(x - marginX + 3, y - 17, 64, 35))
@@ -156,22 +153,22 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
     }
 
     def green() {
-      shipSprites = shipGreen
+      ShipSprites = ShipGreen
       color = Color.green
     }
 
     def red() {
       color = Color.red
-      shipSprites = shipRed
+      ShipSprites = ShipRed
     }
 
     def blue() {
       color = Color.blue
-      shipSprites = shipBlue
+      ShipSprites = ShipBlue
     }
 
     def yellow() {
-      shipSprites = shipYellow
+      ShipSprites = ShipYellow
       color = Color.yellow
     }
 
@@ -191,7 +188,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
     def getHitBoxes: Vector[Shape] = hitBoxes
 
     def collision(implicit hitBoxes: Seq[Shape], color: Color): Boolean = {
-      if (deadDelta <= 0 && ship.getColor != color && hitBoxes.exists(h => ship.getHitBoxes.exists(h.intersects(_)))) {
+      if (deadDelta <= 0 && Ship.getColor != color && hitBoxes.exists(h => Ship.getHitBoxes.exists(h.intersects(_)))) {
         explode()
         true
       } else {
@@ -201,13 +198,13 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
 
     private def explode() {
       lives -= 1
+      neutralStarter.link(new Explosion(x, y, 3f))
       if (lives < 0) unlink()
       else {
-        shipRed.foreach(_.setAlpha(0.5f))
-        shipGreen.foreach(_.setAlpha(0.5f))
-        shipBlue.foreach(_.setAlpha(0.5f))
-        shipYellow.foreach(_.setAlpha(0.5f))
-        neutralStarter.link(new Explosion(x, y, 3f))
+        ShipRed.foreach(_.setAlpha(0.5f))
+        ShipGreen.foreach(_.setAlpha(0.5f))
+        ShipBlue.foreach(_.setAlpha(0.5f))
+        ShipYellow.foreach(_.setAlpha(0.5f))
         deadDelta = 2500
         x = 720f
         y = 1440f
@@ -217,10 +214,10 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
     def update(delta: Int) {
       if (deadDelta > 0) deadDelta -= delta
       else if (deadDelta != Int.MinValue) {
-        shipGreen.foreach(_.setAlpha(1f))
-        shipBlue.foreach(_.setAlpha(1f))
-        shipYellow.foreach(_.setAlpha(1f))
-        shipRed.foreach(_.setAlpha(1f))
+        ShipGreen.foreach(_.setAlpha(1f))
+        ShipBlue.foreach(_.setAlpha(1f))
+        ShipYellow.foreach(_.setAlpha(1f))
+        ShipRed.foreach(_.setAlpha(1f))
         deadDelta = Int.MinValue
       }
 
@@ -235,16 +232,16 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       }
 
       controllerIndex match {
-        case -1 => hitBoxes(0).setLocation(x - 15, y - ship.marginY) ; hitBoxes(1).setLocation(x - ship.marginX + 3, y - 17)
-        case 0 => hitBoxes(0).setLocation(x - 15, y - ship.marginY) ; hitBoxes(1).setLocation(x - ship.marginX + 3, y - 17)
-        case 1 => hitBoxes(0).setLocation(x - ship.marginX, y - ship.marginY + 19f)
-        case 2 => hitBoxes(0).setLocation(x - 38, y - ship.marginY + 7) ; hitBoxes(1).setLocation(x + 22, y - ship.marginY + 7) ; hitBoxes(2).setLocation(x - 8, y - ship.marginY) ; hitBoxes(3).setLocation(x - 20, y - 15)
-        case 3 => hitBoxes(0).setLocation(x - marginX + 6f, y - ship.marginY)
+        case -1 => hitBoxes(0).setLocation(x - 15, y - Ship.marginY) ; hitBoxes(1).setLocation(x - Ship.marginX + 3, y - 17)
+        case 0 => hitBoxes(0).setLocation(x - 15, y - Ship.marginY) ; hitBoxes(1).setLocation(x - Ship.marginX + 3, y - 17)
+        case 1 => hitBoxes(0).setLocation(x - Ship.marginX, y - Ship.marginY + 19f)
+        case 2 => hitBoxes(0).setLocation(x - 38, y - Ship.marginY + 7) ; hitBoxes(1).setLocation(x + 22, y - Ship.marginY + 7) ; hitBoxes(2).setLocation(x - 8, y - Ship.marginY) ; hitBoxes(3).setLocation(x - 20, y - 15)
+        case 3 => hitBoxes(0).setLocation(x - marginX + 6f, y - Ship.marginY)
       }
     }
 
     def render(graphics: Graphics) {
-      shipSprites(direction + spriteIndex).drawCentered(x, y)
+      ShipSprites(direction + spriteIndex).drawCentered(x, y)
       if (showHealth)
         for (i <- 0 until lives)
           heart.drawCentered(x + 50f + 20f * (i / 3), y - 20f + 20f * i - 60f * (i / 3))

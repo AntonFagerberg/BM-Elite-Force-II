@@ -32,7 +32,7 @@ object Main extends BasicGame("BM Elite Force II") {
 
   def main(args: Array[String]) {
     val gameContainer = new AppGameContainer(new ScalableGame(this, 1440, 900, true))
-    gameContainer.setDisplayMode(1920, 1200, true)
+    gameContainer.setDisplayMode(gameContainer.getScreenWidth, gameContainer.getScreenHeight, true)
 //    gameContainer.setDisplayMode(1440, 900, false)
     gameContainer.setUpdateOnlyWhenVisible(false)
     gameContainer.setMouseGrabbed(true)
