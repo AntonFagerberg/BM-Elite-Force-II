@@ -39,9 +39,6 @@ class Intro extends Level {
   override def update(implicit gameContainer: GameContainer, delta: Int) {
     levelDelta += delta
 
-    if (gameContainer.getInput.isKeyPressed(Input.KEY_SPACE))
-      println(levelDelta)
-
     if (levelDelta > 34340)
       background.update
 
@@ -88,8 +85,13 @@ class Intro extends Level {
       }
     }
 
-    for (i <- 0 until gameContainer.getInput.getControllerCount if gameContainer.getInput.isButtonPressed(4, i))
-      introDone = true
+    if (gameContainer.getInput.getControllerCount == 0) {
+      if (gameContainer.getInput.isKeyDown(Input.KEY_ENTER))
+        introDone = true
+    } else {
+      for (i <- 0 until gameContainer.getInput.getControllerCount if gameContainer.getInput.isButtonPressed(4, i))
+        introDone = true
+    }
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
@@ -125,16 +127,3 @@ class Intro extends Level {
     continue.drawCentered(670f, 320f)
   }
 }
-
-/**
-11228
-13926
-16661
-19365
-21981
-24613
-27317
-29965
-34340
-65140
-  */

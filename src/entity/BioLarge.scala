@@ -4,7 +4,7 @@ import org.newdawn.slick.{Color, Graphics, GameContainer, Image}
 import org.newdawn.slick.geom.{Shape, Rectangle}
 import util.Random
 
-class BioLarge(var x: Float, var y: Float, playerStarter: Entity, neutralStarter: Entity, var speedY: Float = 0.02f) extends Entity {
+class BioLarge(var x: Float, playerStarter: Entity, neutralStarter: Entity, var speedY: Float) extends Entity {
   private val bulletStarter = new Starter
   private var health = 500
   private var bulletDelay = 1000
@@ -16,11 +16,12 @@ class BioLarge(var x: Float, var y: Float, playerStarter: Entity, neutralStarter
     new Image("gfx/bio_large_1.png", false, Image.FILTER_NEAREST).getScaledCopy(5f),
     new Image("gfx/bio_large_2.png", false, Image.FILTER_NEAREST).getScaledCopy(5f)
   )
+  private var y = -sprites.head.getHeight / 2f
   private val xOffset = sprites.head.getWidth / 2f - 20f
   private val yOffset = sprites.head.getHeight / 2f - 20f
   private val hitBox = new Rectangle(x - xOffset, y - yOffset, sprites.head.getWidth - 40f, sprites.head.getHeight - 40f)
 
-  override def collision(implicit hitBoxes: List[Shape], color: Color): Boolean = {
+  override def collision(implicit hitBoxes: Seq[Shape], color: Color): Boolean = {
     if (hitBoxes.exists(_.intersects(hitBox))) {
 
       if (hitWait <= 0) {

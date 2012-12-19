@@ -1,12 +1,13 @@
 package entity
 
-import org.newdawn.slick.{Color, Graphics, GameContainer, Image}
+import org.newdawn.slick._
 import org.newdawn.slick.geom.{Shape, Rectangle}
 
 class BigBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
   private var x = 720f
   private var y = -1000f
   private val bulletStarter = new Starter
+  private val shoot = new Sound("sfx/boss_shoot.wav")
   private var superDelta = 0l
   private var pattern = 0
   private val tau = 2d * math.Pi
@@ -18,7 +19,7 @@ class BigBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
   private var sideBulletDelay = 0
   private var health = 5000
   private var tempHealth = 20
-  private val random = new util.Random
+  private val random = new scala.util.Random
   private var randomNumber = 0
   private var color = Color.green
 
@@ -69,7 +70,7 @@ class BigBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
     new Rectangle(x - xOffset2, y - yOffset, sprites.head.getWidth, 110f)
   )
 
-  override def collision(implicit hitBoxes: List[Shape], color: Color): Boolean = {
+  override def collision(implicit hitBoxes: Seq[Shape], color: Color): Boolean = {
     if (this.color != color && this.hitBoxes.exists(box => hitBoxes.exists(_.intersects(box)))) {
       if (pattern <= 1 || pattern == 5 || (pattern == 6 && tempHealth <= 0)) {
         sprites = color match {
@@ -130,6 +131,8 @@ class BigBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
 
       bulletStarter.link(new Bullet(x + 100f, y + yOffset - 30f, color, playerStarter, speedY = 1f))
       bulletStarter.link(new Bullet(x - 100f, y + yOffset - 30f, color, playerStarter, speedY = 1f))
+
+      shoot.play()
 
       if (autoChangeColor)
         changeColor()

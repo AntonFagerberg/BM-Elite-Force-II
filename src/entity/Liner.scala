@@ -18,7 +18,7 @@ class Liner(var x: Float, var y: Float, colors: Vector[Color], playerStarter: En
   private var health = 20
   sprite.rotate(angle)
 
-  override def collision(implicit hitBoxes: List[Shape], color: Color): Boolean = {
+  override def collision(implicit hitBoxes: Seq[Shape], color: Color): Boolean = {
     if (destroyable && colors(colorIndex) != color && hitBoxes.exists(_.intersects(hitBox.transform(Transform.createRotateTransform(math.toRadians(sprite.getRotation).toFloat, x, y))))) {
       health -= 1
       if (health < 0) {

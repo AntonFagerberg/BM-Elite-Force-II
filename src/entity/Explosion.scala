@@ -13,7 +13,7 @@ class Explosion (x: Float, y: Float, scale: Float = 1f) extends Entity {
     new Image("gfx/explosion_6.png", false, Image.FILTER_NEAREST).getScaledCopy(scale)
   )
   private var lifeDelta = 0
-  sound.play()
+  sound.play(1f, 10f)
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
     if (lifeDelta + delta < 300) lifeDelta += delta

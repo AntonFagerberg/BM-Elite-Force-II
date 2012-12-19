@@ -38,7 +38,7 @@ class SaucerBoss(playerStarter: Entity, neutralStarter: Entity) extends Entity {
   private var sprite = sprites.head
   private val explosion = new Sound("sfx/explosion_big.wav")
 
-  override def collision(implicit hitBoxes: List[Shape], color: Color = Color.white): Boolean = {
+  override def collision(implicit hitBoxes: Seq[Shape], color: Color = Color.white): Boolean = {
     if (superDelta >= 13727 && hitBoxes.exists(_.intersects(hitBox))) {
       health -= 0.2f
       if (health <= 0) {

@@ -12,7 +12,7 @@ trait Entity {
 
   def update(implicit gameContainer: GameContainer, delta: Int) {}
   def render(implicit gameContainer: GameContainer, graphics: Graphics) {}
-  def collision(implicit hitBoxes: List[Shape], color: Color = Color.white): Boolean = {
+  def collision(implicit hitBoxes: Seq[Shape], color: Color = Color.white): Boolean = {
     println("Called collision on Entity [" + this.getClass + "] which does not implement it. ")
     false
   }
@@ -27,7 +27,7 @@ trait Entity {
     if (nextEntity.isDefined) nextEntity.get.linkedRender
   }
 
-  def linkedCollision(implicit hitBoxes: List[Shape], color: Color = Color.white): Int = {
+  def linkedCollision(implicit hitBoxes: Seq[Shape], color: Color = Color.white): Int = {
     if (collision && next.isDefined) 1 + next.get.linkedCollision
     else if (!collision && next.isDefined) next.get.linkedCollision
     else if (collision) 1
