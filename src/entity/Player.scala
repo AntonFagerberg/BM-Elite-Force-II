@@ -37,7 +37,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       showHealth = gameContainer.getInput.isButtonPressed(6, controllerIndex)
     } else if (controllerIndex == -1) {
 
-      if (shootDelay < 0f && gameContainer.getInput.isKeyDown(Input.KEY_SPACE)) Ship.fire()
+      if (shootDelay < 0f && (gameContainer.getInput.isKeyDown(Input.KEY_SPACE) || gameContainer.getInput.isKeyDown(Input.KEY_LSHIFT))) Ship.fire()
       if (gameContainer.getInput.isKeyDown(Input.KEY_S)) Ship.green()
       else if (gameContainer.getInput.isKeyDown(Input.KEY_D)) Ship.red()
       else if (gameContainer.getInput.isKeyDown(Input.KEY_A)) Ship.blue()
@@ -48,7 +48,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
       if (gameContainer.getInput.isKeyDown(Input.KEY_LEFT)) velocityX = -speed
       else if (gameContainer.getInput.isKeyDown(Input.KEY_RIGHT)) velocityX = speed
 
-      showHealth = gameContainer.getInput.isKeyDown(Input.KEY_LSHIFT)
+      showHealth = gameContainer.getInput.isKeyDown(Input.KEY_RSHIFT)
     }
 
     for (i <- 0 until delta) {
