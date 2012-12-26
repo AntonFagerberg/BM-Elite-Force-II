@@ -15,7 +15,7 @@ class Player(gameContainer: GameContainer, enemyStarter: Entity, neutralStarter:
   private var shootDelay = 0.0f
   private var axisY = 0f
   private var axisX = 0f
-  private var lives = 30
+  private var lives = 3
   private var showHealth = false
 
   override def collision(implicit hitBoxes: Seq[Shape], color: Color): Boolean = Ship.collision
