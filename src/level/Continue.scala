@@ -6,13 +6,14 @@ import entity.Background
 class Continue(var youCanDoIt: Boolean = false) extends Level {
   private val gameOver = new Image("gfx/game_over.png")
   private val continue = new Image("gfx/continue.png")
+  private val background = new Background(Color.pink)
   private val music =
     if (youCanDoIt) new Music("msc/38773_newgrounds_youcan.ogg", true)
     else new Music("msc/481979_Tangerine.ogg", true)
+
   private var continueDone = false
   private var superDelta = 0l
   private var fadeDelta = 0l
-  private val background = new Background(Color.pink)
 
   music.play()
 

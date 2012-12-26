@@ -17,7 +17,8 @@ class Text(id: Int, var holdTime: Int = 2500) extends Entity {
     else if (holdTime > 0) holdTime -= delta
     else image.setAlpha(image.getAlpha - delta * 0.001f)
 
-    if (image.getAlpha <= 0) unlink()
+    if (image.getAlpha <= 0)
+      unlink()
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {

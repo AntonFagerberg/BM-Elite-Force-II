@@ -8,6 +8,7 @@ class Bullet(var x: Float, var y: Float, color: Color, collisionStarter: Entity,
   private val yOffset = 14f
   private val xOffset = 7f
   private val hitBox = new Rectangle(x - xOffset, y - yOffset, 15, 30)
+
   sprite.setRotation(angle)
 
   override def update(implicit gameContainer: GameContainer, delta: Int) {
@@ -18,11 +19,9 @@ class Bullet(var x: Float, var y: Float, color: Color, collisionStarter: Entity,
         x += speedX
       }
 
-      if (collisionStarter.linkedCollision(List(hitBox.transform(Transform.createRotateTransform(math.toRadians(angle).toFloat, hitBox.getX + xOffset, hitBox.getY + yOffset))), color) > 0) {
-        unlink()
-      } else hitBox.setLocation(x - xOffset, y - yOffset)
+      if (collisionStarter.linkedCollision(List(hitBox.transform(Transform.createRotateTransform(math.toRadians(angle).toFloat, hitBox.getX + xOffset, hitBox.getY + yOffset))), color) > 0) unlink()
+      else hitBox.setLocation(x - xOffset, y - yOffset)
     }
-
   }
 
   override def render(implicit gameContainer: GameContainer, graphics: Graphics) {
