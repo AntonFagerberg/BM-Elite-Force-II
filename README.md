@@ -79,14 +79,14 @@ The Most Inspiring Song Ever
 www.newgrounds.com/audio/listen/38773
 
 ## Graphics (CC BY-SA 3.0 / GPL 2.0 / GPL 3.0)
-## Surt
+### Surt
 opengameart.org/content/shmup-ships 
 
-## WidgetWorx
+### WidgetWorx
 www.widgetworx.com/widgetworx/portfolio/spritelib.html
 
-## Wyveril
+### Wyveril
 opengameart.org/content/unsealed-terrex
 
-## FrenetikFred (Space Invaders icons)
+### FrenetikFred (Space Invaders icons)
 http://frenetikfred.deviantart.com/art/Space-Invaders-icons-32203053
