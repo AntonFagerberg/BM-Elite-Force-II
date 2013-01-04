@@ -1,11 +1,14 @@
 # BM Elite Force 2
-This is the second game in the BM Elite Force series (not much related to each other). BM Elite Force has been my hobby project where I create a new game in a new (for me) language every christmas dedicated to my good old friends. This year the game was written in __Scala__ using the Java library Slick2D (built on LWJGL).
+This is the second game in the BM Elite Force series (not much related to each other). BM Elite Force 2 has been my autumn hobby project; I create a new game in a new (for me) language every christmas dedicated to my good old friends. This year the game was written in __Scala__ using the Java library Slick2D (built on LWJGL).
 
-## Builds & Requirements
-Pre-compiled versions for OS X, Windows and Linux is found in the project root. Please see bugs for Windows and Linux below.
+## Video
+You can see a video of the entire game here: http://vimeo.com/user5392621/bm-elite-force-2
+
+## Downloads, Builds & Requirements
+Pre-compiled versions for OS X, Windows and Linux is found in the project root (in the folders named OS X, Windows and Linux). Please see bugs for Windows and Linux below.
 
 ## Controls
-This game is meant to be played with and __Xbox 360 controller__. You really should use one to enjoy this game (analog precision makes all the difference). There is however keyboard bindings avaliable if you just want to try it out.
+This game is meant to be played with and __Xbox 360 controller__. You really should use one to enjoy this game (analog precision makes all the difference) and it has the correct color coding. There is however keyboard bindings avaliable if you just want to try it out.
 
 ### Xbox 360 controller
  * Steering: Left stick
@@ -23,10 +26,10 @@ This game is meant to be played with and __Xbox 360 controller__. You really sho
 There are some bugs which I know of but I'm not currently not trying to fix them. Feel free to submit a pull request if you wish. :)
 
 ### Linux
-Fullscreen mode and Sound doesn't work in Ubuntu 12.10.
+Fullscreen mode and Sound doesn't work in Ubuntu 12.10 as far as I can tell.
 
 ### Windows
-Keys for shooting doesn't work on some keyboards under Windows.
+Keys for shooting doesn't work on some keyboards under Windows. A problem with sticky keys maybe?
 
 ## Requirements
 Java 1.6+ is required. Everything else is distributed with the pre-compiled builds.
@@ -40,6 +43,7 @@ You must specify the native files, for OS X you should provide the following VM 
     -Djava.library.path=lib/native/macosx
 
 ## BM Elite Force 1 (game from 2011)
+This was the previous game which I coded in Ruby with LibGosu.
 https://github.com/AntonFagerberg/BM-Elite-Force
 
 ## License
