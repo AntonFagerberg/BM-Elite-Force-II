@@ -44,3 +44,48 @@ https://github.com/AntonFagerberg/BM-Elite-Force
 
 ## License
 GNU General Public License, version 2
+
+## Music (CC BY-NC-SA 3.0)
+### Jimmypig
+XS & GS - Game Over
+www.newgrounds.com/audio/listen/469781
+
+X Sentinel - Lift Off
+www.newgrounds.com/audio/listen/498935
+
+### nal1200
+Defiance
+www.newgrounds.com/audio/listen/500422
+
+### Avizura
+Avizura - Loyalty
+www.newgrounds.com/audio/listen/500531
+
+### MainStreamBeats
+LED (SMB) - (wip)
+www.newgrounds.com/audio/listen/476561
+
+### magicalDANI13
+Magically Winterland
+www.newgrounds.com/audio/listen/476147
+
+### unknown
+Tangerine
+www.newgrounds.com/audio/listen/481979
+
+### Bezo
+The Most Inspiring Song Ever
+www.newgrounds.com/audio/listen/38773
+
+## Graphics (CC BY-SA 3.0 / GPL 2.0 / GPL 3.0)
+## Surt
+opengameart.org/content/shmup-ships 
+
+## WidgetWorx
+www.widgetworx.com/widgetworx/portfolio/spritelib.html
+
+## Wyveril
+opengameart.org/content/unsealed-terrex
+
+## FrenetikFred (Space Invaders icons)
+http://frenetikfred.deviantart.com/art/Space-Invaders-icons-32203053
