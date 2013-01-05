@@ -4,8 +4,11 @@ This is the second game in the BM Elite Force series (not much related to each o
 ## Video
 You can see a video of the entire game here: http://vimeo.com/antonfagerberg/bm-elite-force-2
 
-## Downloads, Builds & Requirements
-Pre-compiled versions for OS X, Windows and Linux is found in the project root (in the folders named OS X, Windows and Linux).
+## Downloads
+To download the game visit the Google Code page: http://code.google.com/p/bm-elite-force-2/downloads/list
+
+## Builds & Requirements
+Pre-compiled versions for OS X, Windows and Linux is found in the project root (in the folders named OS X, Windows and Linux). If you just want to download the game, use the link above (Google Code). GitHub will give an error message if you try to download it directly: "Error: blob is too big" (you will have to clone the entire thing to get it).
 
 ## Controls
 This game is meant to be played with and __Xbox 360 controller__. You really should use one to enjoy this game (analog precision makes all the difference) and it has the correct color coding. There is however keyboard bindings avaliable if you just want to try it out.
