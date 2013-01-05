@@ -1,5 +1,5 @@
 # BM Elite Force 2
-This is the second game in the BM Elite Force series (not much related to each other). BM Elite Force 2 has been my autumn hobby project; I create a new game in a new (for me) language every christmas dedicated to my good old friends. This year the game was written in __Scala__ using the Java library Slick2D (built on LWJGL).
+This is the second game in the BM Elite Force series (not much related to each other). BM Elite Force 2 has been my autumn/winter project of 2012. I started this "tradition" 2011 where I create a new game in a new (for me) language every year and release it around christmas dedicated to my good old friends when we meet up. This year the game was written in __Scala__ using the Java library Slick2D (built on LWJGL).
 
 ## Video
 You can see a video of the entire game here: http://vimeo.com/antonfagerberg/bm-elite-force-2
@@ -22,8 +22,8 @@ This game is meant to be played with and __Xbox 360 controller__. You really sho
 ### Keyboard
  * Steering: Arrow keys
  * Change color: W, A, S, D
- * Shoot: Space or Left Shift (see Windows bug note below)
- * Toggle health: Right Shift (see Windows bug note below)
+ * Shoot: Space or Left Shift
+ * Toggle health: Right Shift
 
 ## Bugs
 There are some bugs which I know of but I'm not currently not trying to fix them. Feel free to submit a pull request if you wish. :)
