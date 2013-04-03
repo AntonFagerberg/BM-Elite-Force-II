@@ -88,7 +88,7 @@ http://opengameart.org/content/shmup-ships
 ### WidgetWorx
 www.widgetworx.com/widgetworx/portfolio/spritelib.html
 
-### Wyveril
+### Wyverii
 http://opengameart.org/content/unsealed-terrex
 
 ### FrenetikFred (Space Invaders icons)
